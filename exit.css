@@ -1,0 +1,1 @@
+.map-exit{position:absolute;transform:translate(-50%,-50%);z-index:5;padding:4px 7px;border:1px solid #079753;border-radius:8px;background:rgba(232,255,242,.94);color:#087a45;font-size:8px;font-weight:700;white-space:nowrap}.map-exit.recommended{background:#079753;color:white;box-shadow:0 0 0 4px rgba(7,151,83,.18)}.hazard button:disabled{opacity:.72;cursor:default}
