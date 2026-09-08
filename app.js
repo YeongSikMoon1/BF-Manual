@@ -5,6 +5,7 @@ const floorData={
  '2f':{name:'2층',image:'assets/전시동 2층.png',title:'호실을 선택하세요',locations:[['201','201호',15,58],['202','202호',23,58],['203','203호',31,58],['204','204호',39,58],['205','205호',47,58],['206','206호',55,58],['207','207호',63,58],['208','208호',71,69],['209','209호',78,69],['210','210호',71,78],['211','211호',78,78],['212','212호',78,86],['213','213호',71,88],['214','214호',86,80]],exits:[['서쪽 비상구',7,65],['서북쪽 비상구',10,37],['중앙 비상구 1',44,65],['중앙 비상구 2',62,65],['동북쪽 비상구',91,43],['동쪽 비상구',88,78]]},
  '3f':{name:'3층',image:'assets/전시동 3층.png',title:'호실을 선택하세요',locations:[['301','301호',30,45],['302','302호',45,45],['303','303호',30,69],['304','304호',60,45],['305','305호',45,69],['306','306호',60,69],['307','307호',81,59]],exits:[['서북쪽 비상구',18,27],['서남쪽 비상구',12,82],['동쪽 비상구',92,52]]}
 };
+Object.values(floorData).forEach(data=>data.title='현재 위치를 선택하세요');
 let floor='2f',locationId='205',mobility='혼자서 이동할 수 있어요';const hazardsByFloor={};
 function weightedCount(){const roll=Math.random();return roll<.7?0:roll<.9?1:2}
 function createHazardsForFloor(key,count=weightedCount()){const data=floorData[key],picked=[];while(picked.length<count){const item=data.locations[Math.floor(Math.random()*data.locations.length)];if(!picked.includes(item))picked.push(item)}hazardsByFloor[key]=picked.map(item=>({item,scale:+(1.5+Math.random()*1.5).toFixed(2)}))}
