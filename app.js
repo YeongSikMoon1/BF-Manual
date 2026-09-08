@@ -55,11 +55,11 @@ function edgeClear(a,b,margin=2.8){return hazards().every(h=>segmentDistance(h.i
 function segmentDistance(x,y,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy||1))),px=a[0]+t*dx,py=a[1]+t*dy;return Math.hypot(x-px,y-py)}
 function pathLength(path){return path.slice(1).reduce((n,p,i)=>n+Math.hypot(p[0]-path[i][0],p[1]-path[i][1]),0)}
 function planRoute(){
- const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2],preferredExit=room[3];
+ const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2];
  const nodes={...nav.nodes,start,door},links=[...nav.links,['start','door'],['door',entry]],strict=shortestRoutes(nodes,links,true);
  let candidates=floorData[floor].exits.map(exit=>{const names=strict[nav.exitNodes[exit[0]]];return names&&{exit,path:names.map(name=>nodes[name]),blocked:false}}).filter(Boolean);
  if(!candidates.length){const nearest=[...floorData[floor].exits].sort((a,b)=>Math.hypot(a[1]-door[0],a[2]-door[1])-Math.hypot(b[1]-door[0],b[2]-door[1]))[0];return{exit:nearest,path:[start,door],blocked:true,noPath:true}}
- const preferred=candidates.find(candidate=>candidate.exit[0]===preferredExit),route=preferred||candidates.sort((a,b)=>pathLength(a.path)-pathLength(b.path))[0];route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
+ const route=candidates.sort((a,b)=>pathLength(a.path)-pathLength(b.path))[0];route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
 }
 function shortestRoutes(nodes,links,strict){
  const graph={};Object.keys(nodes).forEach(k=>graph[k]=[]);
