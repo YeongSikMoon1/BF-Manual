@@ -9,33 +9,33 @@ const floorData={
 // Each selectable place has an interior rectangle, its doorway and a corridor node.
 const navigation={
  b1:{rooms:{
-  'west-elevator':[[20,57,23.5,63],[24,63],'w'],'control-room':[[42,56,50,62],[48,63],'c2'],
-  'east-elevator':[[85,41,90,49],[85,50],'e']},
+  'west-elevator':[[20,57,23.5,63],[24,63],'w','서쪽 비상구'],'control-room':[[42,56,50,62],[48,63],'c2','중앙 비상구'],
+  'east-elevator':[[85,41,90,49],[85,50],'e','동쪽 비상구']},
   nodes:{west:[7.3,39],w:[25,63],c1:[28.3,60.1],c2:[53.4,63.1],south:[46.8,78],c3:[70,65],e:[84,58],ne:[87.5,28.6],east:[93.4,51.6]},
   links:[['west','w'],['w','c1'],['c1','c2'],['c2','south'],['c2','c3'],['c3','e'],['e','ne'],['e','east']],
   exitNodes:{'서쪽 비상구':'west','서측 중앙 비상구':'c1','중앙 비상구':'c2','남측 중앙 비상구':'south','동북쪽 비상구':'ne','동쪽 비상구':'east'}},
  '1f':{rooms:{
-  hall1:[[17,25,39,48],[32,52],'c2'],hall2:[[40,27,61,51],[51,53],'c3'],
-  hall3:[[62,31,82,53],[72,55],'c4'],multi:[[13,64,43,83],[38,62],'c2']},
+  hall1:[[17,25,39,48],[32,52],'c2','서쪽 비상구'],hall2:[[40,27,61,51],[51,53],'c3','남서쪽 비상구'],
+  hall3:[[62,31,82,53],[72,55],'c4','동북쪽 비상구'],multi:[[13,64,43,83],[38,62],'c2','남서쪽 비상구']},
   nodes:{west:[8.1,49.2],c1:[18,57],c2:[36,57],c3:[55,58],c4:[73,59],c5:[86,59],ne:[91.7,41.1],east:[92.6,67.9],se:[90.7,77.9],south1:[50.6,93.3],south2:[74,92.6]},
   links:[['west','c1'],['c1','c2'],['c2','c3'],['c3','c4'],['c4','c5'],['c5','ne'],['c5','east'],['east','se'],['c3','south1'],['c4','south2']],
   exitNodes:{'서쪽 비상구':'west','남서쪽 비상구':'south1','남쪽 비상구':'south2','동북쪽 비상구':'ne','동쪽 비상구':'east','동남쪽 비상구':'se'}},
  '2f':{rooms:{
-  '201':[[13,55.5,18.5,63],[18,54],'u1'],'202':[[19.5,55.5,26,63],[23,54],'u2'],
-  '203':[[27,55.5,33.5,63],[31,54],'u3'],'204':[[34.5,55.5,41,63],[39,54],'u4'],
-  '205':[[42,55.5,48.5,63],[46,54],'u5'],'206':[[49,55.5,56,63],[54,54],'u6'],
-  '207':[[57,55.5,64,63],[62,54],'u7'],'208':[[57,68,63,74],[56,71],'v1'],
-  '209':[[64,68,69.5,74],[63,71],'v1'],'210':[[57,76,63,82],[56,79],'v2'],
-  '211':[[64,76,69.5,82],[63,79],'v2'],'212':[[64,83,69.5,89],[63,86],'v3'],
-  '213':[[57,84,63,90],[56,87],'v3'],'214':[[72,75,80,84],[71,79],'r2']},
-  nodes:{nw:[12.7,40.7],west:[8.7,65.7],u0:[10,52],u1:[18,52],u2:[23,52],u3:[31,52],u4:[39,52],u5:[46,52],u6:[54,52],u7:[62,52],u8:[72,52],hallExit:[76.8,50.4],u9:[82,52],c1:[36.8,65.7],c2:[52.1,65.9],v1:[55,71],v2:[55,79],v3:[55,87],r1:[70,87],r2:[72,79],right:[84,72],ne:[89.6,32.1],east:[95.5,46.4],se:[81.4,81.5]},
-  links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['u8','u9'],['u6','v1'],['v1','v2'],['v2','v3'],['v3','r1'],['r1','r2'],['r2','right'],['u9','ne'],['u9','east'],['u9','right'],['right','se']],
+  '201':[[13,55.5,18.5,63],[18,54],'u1','서쪽 비상구'],'202':[[19.5,55.5,26,63],[23,54],'u2','서쪽 비상구'],
+  '203':[[27,55.5,33.5,63],[31,54],'u3','서쪽 비상구'],'204':[[34.5,55.5,41,63],[39,54],'u4','서쪽 비상구'],
+  '205':[[42,55.5,48.5,63],[46,54],'u5','동측 복도 비상구'],'206':[[49,55.5,56,63],[54,54],'u6','동측 복도 비상구'],
+  '207':[[57,55.5,64,63],[62,54],'u7','동측 복도 비상구'],'208':[[57,68,63,74],[57,70],'l1','중앙 비상구 2'],
+  '209':[[64,68,69.5,74],[69.5,70],'r1','동남쪽 비상구'],'210':[[57,81.5,63,87],[57,84],'l3','중앙 비상구 2'],
+  '211':[[64,75,69.5,81],[69.5,77],'r2','동남쪽 비상구'],'212':[[64,82,69.5,87.5],[69.5,84],'r3','동남쪽 비상구'],
+  '213':[[57,87.5,63,92],[57,89.5],'l4','중앙 비상구 2'],'214':[[72,75,80,84],[72,79],'r2','동남쪽 비상구']},
+  nodes:{nw:[12.7,40.7],west:[8.7,65.7],u0:[10,52],u1:[18,52],u2:[23,52],u3:[31,52],u4:[39,52],u5:[46,52],u6:[54,52],u7:[62,52],u8:[72,52],hallExit:[76.8,50.4],u9:[82,52],c1:[36.8,65.7],c2:[52.1,65.9],l1:[55,70],l2:[55,77],l3:[55,84],l4:[55,89.5],rNorth:[70,57],rTop:[70,66],r1:[70,70],r2:[70,77],r3:[70,84],r4:[70,89.5],right:[84,70],ne:[89.6,32.1],east:[95.5,46.4],se:[81.4,81.5]},
+  links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['u8','u9'],['u9','ne'],['u9','east'],['u8','rNorth'],['rNorth','rTop'],['c2','l1'],['l1','l2'],['l2','l3'],['l3','l4'],['rTop','r1'],['r1','r2'],['r2','r3'],['r3','r4'],['rTop','right'],['right','se']],
   exitNodes:{'서북쪽 비상구':'nw','서쪽 비상구':'west','중앙 비상구 1':'c1','중앙 비상구 2':'c2','동북쪽 비상구':'ne','동쪽 비상구':'east','동측 복도 비상구':'hallExit','동남쪽 비상구':'se'}},
  '3f':{rooms:{
-  '301':[[23,37,36,53],[30,55],'c2'],'302':[[37,37,50,53],[45,55],'c3'],
-  '304':[[51,37,64,53],[60,55],'c4'],'303':[[23,61,36,75],[30,59],'c2'],
-  '305':[[37,61,50,75],[45,59],'c3'],'306':[[51,61,64,75],[60,59],'c4'],
-  '307':[[74,48,86,68],[71,58],'c5']},
+  '301':[[23,37,36,53],[30,55],'c2','서북쪽 비상구'],'302':[[37,37,50,53],[45,55],'c3','서북쪽 비상구'],
+  '304':[[51,37,64,53],[60,55],'c4','동쪽 비상구'],'303':[[23,61,36,75],[30,59],'c2','서북쪽 비상구'],
+  '305':[[37,61,50,75],[45,59],'c3','동쪽 비상구'],'306':[[51,61,64,75],[60,59],'c4','동쪽 비상구'],
+  '307':[[74,48,86,68],[71,58],'c5','동쪽 비상구']},
   nodes:{nw:[20.5,25.9],c1:[18,57],c2:[30,57],c3:[45,57],c4:[60,57],c5:[71,57],c6:[84,57],east:[90.6,54.1]},
   links:[['nw','c1'],['c1','c2'],['c2','c3'],['c3','c4'],['c4','c5'],['c5','c6'],['c6','east']],
   exitNodes:{'서북쪽 비상구':'nw','동쪽 비상구':'east'}}
@@ -55,11 +55,11 @@ function edgeClear(a,b,margin=2.8){return hazards().every(h=>segmentDistance(h.i
 function segmentDistance(x,y,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy||1))),px=a[0]+t*dx,py=a[1]+t*dy;return Math.hypot(x-px,y-py)}
 function pathLength(path){return path.slice(1).reduce((n,p,i)=>n+Math.hypot(p[0]-path[i][0],p[1]-path[i][1]),0)}
 function planRoute(){
- const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2];
+ const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2],preferredExit=room[3];
  const nodes={...nav.nodes,start,door},links=[...nav.links,['start','door'],['door',entry]],strict=shortestRoutes(nodes,links,true);
  let candidates=floorData[floor].exits.map(exit=>{const names=strict[nav.exitNodes[exit[0]]];return names&&{exit,path:names.map(name=>nodes[name]),blocked:false}}).filter(Boolean);
  if(!candidates.length){const nearest=[...floorData[floor].exits].sort((a,b)=>Math.hypot(a[1]-door[0],a[2]-door[1])-Math.hypot(b[1]-door[0],b[2]-door[1]))[0];return{exit:nearest,path:[start,door],blocked:true,noPath:true}}
- const route=candidates.sort((a,b)=>pathLength(a.path)-pathLength(b.path))[0];route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
+ const preferred=candidates.find(candidate=>candidate.exit[0]===preferredExit),route=preferred||candidates.sort((a,b)=>pathLength(a.path)-pathLength(b.path))[0];route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
 }
 function shortestRoutes(nodes,links,strict){
  const graph={};Object.keys(nodes).forEach(k=>graph[k]=[]);
@@ -85,4 +85,6 @@ function selectLocation(id){locationId=id;const item=currentLocation();randomPoi
 function renderHazard(overlay,{item,scale}){const [,label,x,y]=item,smoke=document.createElement('span'),fire=document.createElement('span');smoke.className='smoke-zone';smoke.style.cssText=`left:${x}%;top:${y}%;--scale:${scale}`;smoke.title=`${label} 연기 범위`;fire.className='fire-point';fire.style.cssText=`left:${x}%;top:${y}%`;fire.title=`${label} 화재`;fire.innerHTML='<svg aria-hidden="true"><use href="#icon-fire"/></svg>';overlay.append(smoke,fire)}
 function renderResult(){const data=floorData[floor],item=currentLocation(),route=planRoute(),exit=route.exit[0];$('#resultLocation').textContent=`${data.name} ${item[1]}`;$('#resultStatus').textContent=mobility;$('#resultExit').textContent=/휠체어|어려워/.test(mobility)?`${exit} 인근 안전 대피장소`:exit;$('.result-hazard strong').textContent=hazards().length?`${hazards().map(h=>h.item[1]).join(', ')}에서 화재와 연기가 감지되었습니다.`:`현재 ${Object.entries(hazardsByFloor).filter(([,v])=>v.length).map(([k])=>floorData[k].name).join('과 ')}에 화재가 진행되고 있습니다.`;$('.result-hazard small').textContent=route.blocked?'안전한 통로가 확보될 때까지 안내 요원의 지시를 기다리세요.':`${exit} 방향으로 연기 구역을 우회하세요.`}
 $$('[data-step],[data-go]').forEach(b=>b.onclick=()=>show(Number(b.dataset.step||b.dataset.go)));$$('[data-help]').forEach(b=>b.onclick=()=>show(2));$$('[data-next]').forEach(b=>b.onclick=()=>show(Number(b.dataset.next)));$$('[data-status]').forEach(b=>b.onclick=()=>{$$('[data-status]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');mobility=b.dataset.status;$('.primary.disabled')?.classList.remove('disabled')});$$('[data-floor]').forEach(b=>b.onclick=()=>{floor=b.dataset.floor;locationId=floorData[floor].locations[0][0];$$('[data-floor]').forEach(x=>x.classList.toggle('selected',x.dataset.floor===floor));selectLocation(locationId)});
-function modal(title,text){$('#modalTitle').textContent=title;$('#modalText').textContent=text;$('#modal').classList.add('open')}$('#close').onclick=$('#modalConfirm').onclick=()=>$('#modal').classList.remove('open');$('#arStart').onclick=()=>modal('탈출 안내 시작',`${safestExit()[0]} 방향으로 안내를 시작합니다.`);$('#guardian').onclick=()=>modal('보호자에게 알리기',`현재 위치와 ${safestExit()[0]} 대피 경로를 전달할 메시지를 준비했습니다.`);$('#manager').onclick=()=>modal('관리자에게 알리기',`현재 위치, 이동 상태, ${safestExit()[0]} 추천 정보를 전달할 메시지를 준비했습니다.`);$('#nextGuide').onclick=()=>modal('다음 안내',`${safestExit()[0]} 방향으로 위험 구역을 우회해 이동하세요.`);renderFloor();
+function modal(title,text){$('#modalTitle').textContent=title;$('#modalText').textContent=text;$('#modal').classList.add('open')}
+function alertSummary(recipient){const item=currentLocation(),route=planRoute(),detected=hazards().length?hazards().map(h=>h.item[1]).join(', '):'현재 층 감지 없음';return`${recipient}에게 아래 내용을 전달합니다.\n\n현재 위치: ${floorData[floor].name} ${item[1]}\n이동 상태: ${mobility}\n화재·연기 위치: ${detected}\n추천 대피 지점: ${route.exit[0]}\n안내 상태: ${route.blocked?'안전한 통로 확인 필요':'연기 구역을 우회하는 경로 확보'}`}
+$('#close').onclick=$('#modalConfirm').onclick=()=>$('#modal').classList.remove('open');$('#arStart').onclick=()=>modal('탈출 안내 시작',`${safestExit()[0]} 방향으로 탈출 안내를 시작합니다.`);$('#guardian').onclick=()=>modal('보호자에게 알리기',alertSummary('보호자'));$('#manager').onclick=()=>modal('관리자에게 알리기',alertSummary('관리자'));renderFloor();
