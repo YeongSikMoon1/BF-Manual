@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="status.css">
+  <link rel="stylesheet" href="map.css">
 </head>
 <body>
   <svg class="svg-sprite" aria-hidden="true">
@@ -52,11 +53,11 @@
     </section>
 
     <section class="screen" data-screen="3">
-      <button class="back" data-go="2">‹&nbsp; 뒤로</button><h1>현재 위치를<br>선택해주세요</h1><p class="description">GPS 없이 직접 선택한 위치만 사용합니다.</p>
+      <button class="back" data-go="2">‹&nbsp; 뒤로</button><h1>현재 위치를<br>선택해주세요</h1>
       <div class="floor-tabs"><button data-floor="b1">B1</button><button data-floor="1f">1F</button><button data-floor="2f" class="selected">2F</button><button data-floor="3f">3F</button></div>
-      <div class="map-card"><img id="map" src="assets/전시동 2층.png" alt="전시동 2층 평면도"><span class="map-current">현재 위치</span><span class="map-fire"><svg><use href="#icon-fire"/></svg></span></div>
+      <div class="map-card"><img id="map" src="assets/전시동 2층.png" alt="전시동 2층 평면도"><div id="mapOverlay" class="map-overlay"></div></div>
       <div class="hazard"><svg><use href="#icon-alert"/></svg><span><strong id="hazardTitle">화재 발생 지점: 중앙 비상구 인근</strong><small>해당 비상구를 피하고 안전한 경로로 안내합니다.</small></span><button id="randomFire">위치 변경</button></div>
-      <h2>현재 위치를 선택하세요</h2><div class="rooms" id="rooms"></div><button class="primary" data-next="4">다음 <b>›</b></button>
+      <h2 id="locationGroupTitle">호실을 선택하세요</h2><div class="rooms" id="rooms"></div><button class="primary" data-next="4">다음 <b>›</b></button>
     </section>
 
     <section class="screen" data-screen="4">
