@@ -1,1 +1,71 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BF Manual</title><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head><body><main class="shell"><header><div class="wordmark"><span>BF</span> Manual</div><button class="bell" aria-label="알림"><i></i></button></header><nav class="progress"><button data-step="1" class="active"><b>1</b><span>상태 확인</span></button><button data-step="2"><b>2</b><span>현재 위치</span></button><button data-step="3"><b>3</b><span>AI 분석</span></button><button data-step="4"><b>4</b><span>대피 안내</span></button></nav><div id="screens"><section class="page active" data-page="1"><p class="caption">지금, 더 안전한 내일을 위해</p><h1>어떤 도움이<br>필요하신가요?</h1><div class="help-cards"><button class="help fire" data-help="fire"><span class="pictogram flame"></span><strong>화재</strong><small>대피 안내 시작</small></button><button class="help aid" data-help="aid"><span class="pictogram heart"></span><strong>응급</strong><small>응급 상황 알리기</small></button></div><button class="place" data-step="2"><span class="pin"></span><span><small>현재 선택 위치</small><b>전시동 2층 205호실</b></span><em>›</em></button></section><section class="page" data-page="2"><button class="back" data-step="1">‹　뒤로</button><h1>현재 이동 상태를<br>알려주세요</h1><p class="lead">안전한 대피 방법을 찾는 데 사용합니다.</p><div class="mobility"><button data-status="wheelchair"><span class="pictogram chair"></span>휠체어를 이용하고 있어요</button><button data-status="walker"><span class="pictogram walk"></span>보행 보조기구를 사용하고 있어요</button><button data-status="alone"><span class="pictogram person"></span>혼자서 이동할 수 있어요</button><button data-status="help"><span class="pictogram support"></span>혼자 이동하기 어려워 도움이 필요해요</button></div><button class="next disabled" data-next="3">다음 <em>›</em></button></section><section class="page" data-page="3"><button class="back" data-step="2">‹　뒤로</button><h1>현재 위치를<br>선택해주세요</h1><p class="lead">GPS 없이 선택한 위치만 사용합니다.</p><div class="floor-tabs"><button data-floor="b1">B1</button><button data-floor="1f">1F</button><button data-floor="2f" class="selected">2F</button><button data-floor="3f">3F</button></div><div class="map"><img id="map" src="assets/전시동 2층.png" alt="전시동 2층 평면도"><span class="current-dot">현재 위치</span></div><div class="incident"><span class="alert-picto">!</span><div><b>화재 발생 지점: 중앙 비상구 인근</b><small>해당 비상구를 피하고 안전한 경로로 안내합니다.</small></div><button id="randomFire">변경</button></div><b class="section-label">호실을 선택해주세요</b><div class="rooms" id="rooms"></div><button class="next" data-next="4">다음 <em>›</em></button></section><section class="page" data-page="4"><button class="back" data-step="3">‹　뒤로</button><h1>대피 안내<br>결과</h1><div class="danger"><span class="alert-picto">!</span><div><b>중앙 비상구 인근에서 화재와 연기가 감지되었습니다.</b><small>2층 중앙 비상구는 이용하지 마세요.</small></div></div><div class="info-card"><small>현재 위치</small><b id="resultPlace">전시동 2층 205호실</b><small>이동 상태</small><b id="resultStatus">혼자서 이동할 수 있어요</b><small>가장 가까운 안전한 비상구</small><b id="resultExit">2층 서쪽 비상구</b></div><div class="instruction"><small>현재 이동 안내　　1 / 4</small><span class="arrow">↑</span><strong>205호실에서 복도로 이동</strong><small>약 6m</small><button id="nextGuide">다음 안내　›</button></div><button class="next dark" id="arStart">탈출 안내 시작　›</button><button class="wide blue" id="guardian">보호자에게 알리기</button><button class="wide white" id="manager">관리자에게 알리기</button></section></div></main><div class="modal" id="modal"><div><button id="close">×</button><h2 id="modalTitle"></h2><p id="modalText"></p><button class="next" id="modalAction">확인</button></div></div><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BF Manual</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="icon-fire" viewBox="0 0 48 48"><path d="M26 4c2 9-6 12-6 19 0 4 2 6 5 6 5 0 7-6 4-11 8 6 11 15 6 22-6 8-21 6-24-5-3-8 1-15 6-21 3-4 7-7 9-12 2 5 3 8 6 10 1-5 5-9 6-15Z"/></symbol>
+    <symbol id="icon-heart" viewBox="0 0 48 48"><path d="M24 40S7 30 7 17c0-7 9-10 14-3l3 4 3-4c5-7 14-4 14 3 0 13-17 23-17 23Z"/><path d="M11 25h8l3-7 4 14 3-7h8"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 48 48"><path d="M24 43S10 31 10 18a14 14 0 1 1 28 0c0 13-14 25-14 25Z"/><circle cx="24" cy="18" r="5"/></symbol>
+    <symbol id="icon-wheelchair" viewBox="0 0 48 48"><circle cx="24" cy="7" r="4"/><path d="M22 14h-6l-3 15h17l6 10h7M21 19h10M17 25a11 11 0 1 0 15 12"/></symbol>
+    <symbol id="icon-walker" viewBox="0 0 48 48"><path d="M17 8c-4 6-4 12 1 16l-3 16M31 8c4 6 4 12-1 16l3 16M18 25l6-7 6 7M24 18v22"/><circle cx="15" cy="42" r="2"/><circle cx="33" cy="42" r="2"/></symbol>
+    <symbol id="icon-person" viewBox="0 0 48 48"><circle cx="24" cy="12" r="7"/><path d="M10 42c1-11 6-17 14-17s13 6 14 17"/></symbol>
+    <symbol id="icon-support" viewBox="0 0 48 48"><path d="M24 39S9 31 9 19c0-7 9-9 15-2 6-7 15-5 15 2 0 12-15 20-15 20Z"/><path d="M5 30c5-1 9 1 12 5M43 30c-5-1-9 1-12 5"/></symbol>
+    <symbol id="icon-alert" viewBox="0 0 48 48"><path d="M24 5 44 41H4L24 5Z"/><path d="M24 17v11M24 35h.01"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 48 48"><path d="M24 4 40 10v12c0 11-6 18-16 22C14 40 8 33 8 22V10l16-6Z"/><path d="M24 14v10M24 31h.01"/></symbol>
+    <symbol id="icon-share" viewBox="0 0 48 48"><circle cx="10" cy="24" r="5"/><circle cx="37" cy="10" r="5"/><circle cx="37" cy="38" r="5"/><path d="m15 22 17-9M15 27l17 9"/></symbol>
+  </svg>
+
+  <main class="phone">
+    <header class="app-header"><div class="brand"><span>BF</span> Manual</div></header>
+    <nav class="steps" aria-label="대피 안내 단계">
+      <button data-step="1" class="active"><b>1</b><span>상태 확인</span></button>
+      <button data-step="2"><b>2</b><span>현재 위치</span></button>
+      <button data-step="3"><b>3</b><span>AI 분석</span></button>
+      <button data-step="4"><b>4</b><span>대피 안내</span></button>
+    </nav>
+
+    <section class="screen active" data-screen="1">
+      <p class="intro">지금, 더 안전한 내일을 위해</p>
+      <h1>어떤 도움이<br>필요하신가요?</h1>
+      <div class="emergency-grid">
+        <button class="emergency-card fire-card" data-help="fire"><svg><use href="#icon-fire"/></svg><strong>화재</strong><small>대피 안내 시작</small></button>
+        <button class="emergency-card aid-card" data-help="aid"><svg><use href="#icon-heart"/></svg><strong>응급</strong><small>준비 중인 기능</small></button>
+      </div>
+      <button class="location-card" data-go="3"><svg><use href="#icon-pin"/></svg><span><small>현재 선택 위치</small><strong id="locationText">전시동 2층 205호실</strong></span><b>›</b></button>
+    </section>
+
+    <section class="screen" data-screen="2">
+      <button class="back" data-go="1">‹&nbsp; 뒤로</button><h1>현재 이동 상태를<br>알려주세요</h1><p class="description">안전한 대피 방법을 찾는 데 사용됩니다.</p>
+      <div class="status-list">
+        <button data-status="휠체어를 이용하고 있어요"><svg><use href="#icon-wheelchair"/></svg><span>휠체어를 이용하고 있어요</span></button>
+        <button data-status="보행 보조기구를 사용하고 있어요"><svg><use href="#icon-walker"/></svg><span>보행 보조기구를 사용하고 있어요</span></button>
+        <button data-status="혼자서 이동할 수 있어요"><svg><use href="#icon-person"/></svg><span>혼자서 이동할 수 있어요</span></button>
+        <button data-status="혼자 이동하기 어려워 도움이 필요해요"><svg><use href="#icon-support"/></svg><span>혼자 이동하기 어려워 도움이 필요해요</span></button>
+      </div><button class="primary disabled" data-next="3">다음 <b>›</b></button>
+    </section>
+
+    <section class="screen" data-screen="3">
+      <button class="back" data-go="2">‹&nbsp; 뒤로</button><h1>현재 위치를<br>선택해주세요</h1><p class="description">GPS 없이 직접 선택한 위치만 사용합니다.</p>
+      <div class="floor-tabs"><button data-floor="b1">B1</button><button data-floor="1f">1F</button><button data-floor="2f" class="selected">2F</button><button data-floor="3f">3F</button></div>
+      <div class="map-card"><img id="map" src="assets/전시동 2층.png" alt="전시동 2층 평면도"><span class="map-current">현재 위치</span><span class="map-fire"><svg><use href="#icon-fire"/></svg></span></div>
+      <div class="hazard"><svg><use href="#icon-alert"/></svg><span><strong id="hazardTitle">화재 발생 지점: 중앙 비상구 인근</strong><small>해당 비상구를 피하고 안전한 경로로 안내합니다.</small></span><button id="randomFire">위치 변경</button></div>
+      <h2>현재 위치를 선택하세요</h2><div class="rooms" id="rooms"></div><button class="primary" data-next="4">다음 <b>›</b></button>
+    </section>
+
+    <section class="screen" data-screen="4">
+      <p class="eyebrow"><svg><use href="#icon-shield"/></svg> 화재 위치 기반 대피 안내</p><h1>대피 안내 결과</h1>
+      <div class="hazard result-hazard"><svg><use href="#icon-alert"/></svg><span><strong>중앙 비상구 인근에서 화재와 연기가 감지되었습니다.</strong><small>2층 중앙 비상구는 이용하지 마세요.</small></span></div>
+      <div class="result-card"><small>현재 위치</small><strong id="resultLocation">전시동 2층 205호실</strong><small>이동 상태</small><strong id="resultStatus">혼자서 이동할 수 있어요</strong><small>가장 가까운 안전한 비상구</small><strong id="resultExit">2층 서쪽 비상구</strong></div>
+      <div class="route-card"><small>현재 이동 안내 <b>1 / 4</b></small><span class="route-arrow">↑</span><strong>205호실에서 복도로 이동</strong><em>약 6m</em><button id="nextGuide">다음 안내　›</button></div>
+      <button class="primary" id="arStart">탈출 안내 시작 <b>›</b></button><button class="action blue" id="guardian"><svg><use href="#icon-share"/></svg>보호자에게 알리기</button><button class="action" id="manager">관리자에게 알리기</button>
+    </section>
+  </main>
+  <div class="modal" id="modal"><div class="modal-card"><button id="close">×</button><h2 id="modalTitle"></h2><p id="modalText"></p><button class="primary" id="modalConfirm">확인</button></div></div>
+  <script src="app.js"></script>
+</body></html>
