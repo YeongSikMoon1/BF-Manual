@@ -1,10 +1,31 @@
-import { createServer } from 'node:http';
+import express from 'express';
 import { readFile } from 'node:fs/promises';
-import { extname, join, normalize } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { invokeEvacuationAgent } from './evacuation-agent.mjs';
-const root=process.cwd(); const types={'.html':'text/html;charset=utf-8','.css':'text/css','.js':'text/javascript','.png':'image/png'};
-async function loadEnv(){try{const text=await readFile(join(root,'.env'),'utf8');text.split(/\r?\n/).forEach(line=>{const match=line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);if(match&&!process.env[match[1]])process.env[match[1]]=match[2].trim()})}catch{}}
+
+const root=dirname(fileURLToPath(import.meta.url));
+const app=express();
+
+async function loadEnv(){
+ try{
+  const text=await readFile(join(root,'.env'),'utf8');
+  text.split(/\r?\n/).forEach(line=>{const match=line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);if(match&&!process.env[match[1]])process.env[match[1]]=match[2].trim()});
+ }catch{}
+}
+
 await loadEnv();
-function json(res,status,data){res.writeHead(status,{'Content-Type':'application/json;charset=utf-8'});res.end(JSON.stringify(data))}
-async function body(req){const chunks=[];for await(const chunk of req)chunks.push(chunk);return JSON.parse(Buffer.concat(chunks).toString('utf8'))}
-createServer(async (req,res)=>{try{if(req.method==='POST'&&req.url==='/api/evacuation-guide'){if(!process.env.OPENAI_API_KEY)return json(res,503,{error:'OPENAI_API_KEY가 설정되지 않았습니다.'});const payload=await body(req);return json(res,200,await invokeEvacuationAgent(payload))}const path=normalize(join(root,decodeURIComponent(req.url==='/'?'/index.html':req.url)));if(!path.startsWith(root)){res.writeHead(403);return res.end()}const data=await readFile(path);res.writeHead(200,{'Content-Type':types[extname(path)]||'application/octet-stream'});res.end(data)}catch(error){if(req.url==='/api/evacuation-guide')return json(res,500,{error:error.message});res.writeHead(404);res.end('Not found')}}).listen(8000);
+app.use(express.json({limit:'256kb'}));
+app.get('/api/public-config',(_req,res)=>res.json({kakaoJsKey:process.env.KAKAO_JS_KEY||''}));
+app.post('/api/evacuation-guide',async(req,res)=>{
+ try{
+  if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'OPENAI_API_KEY가 설정되지 않았습니다.'});
+  return res.json(await invokeEvacuationAgent(req.body));
+ }catch(error){return res.status(500).json({error:error.message})}
+});
+app.use(express.static(root,{index:'index.html'}));
+app.get('*path',(_req,res)=>res.sendFile(join(root,'index.html')));
+
+if(!process.env.VERCEL)app.listen(8000,()=>console.log('BF Manual: http://localhost:8000'));
+
+export default app;

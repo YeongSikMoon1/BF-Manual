@@ -7,7 +7,9 @@ BEST FRIENDLY · BARRIER FREE · BE FOUND
 
 `node server.mjs`로 실행한 뒤 `http://localhost:8000`을 여세요. 대피 결과 화면에 진입하면 현재 층·방·랜덤 위치·화재·연기·안전 경로가 JSON으로 자동 구성되어 백엔드 AI 안내 API에 전달됩니다.
 
-환경변수 예시는 `.env.example`에 있습니다. OpenAI 키는 브라우저가 아닌 서버에서만 읽습니다. 카카오톡 API 연동은 추후 추가합니다.
+환경변수 예시는 `.env.example`에 있습니다. OpenAI 키와 카카오 REST API 키는 브라우저에 노출하지 않습니다. `KAKAO_JS_KEY`만 카카오 JavaScript SDK 초기화를 위해 `/api/public-config`로 전달됩니다.
+
+메인 화면의 카카오톡 위치 전송 버튼은 현재 층·호실, 이동 상태, 추천 비상구를 카카오톡 공유 메시지로 구성합니다. 배포 후 해당 주소를 카카오 개발자 콘솔의 JavaScript SDK 도메인과 제품 링크 웹 도메인에 등록해야 실제 공유가 동작합니다.
 
 ## LangGraph evacuation agent
 
