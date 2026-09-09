@@ -1,0 +1,14 @@
+# Environment variables / API keys
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
