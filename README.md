@@ -1,6 +1,7 @@
 # BF Manual
 
-Best Friendly · Barrier Free · Best Friend Manual — 거동불편자를 위한 대피로 안내 프로토타입.
+BEST FRIENDLY · BARRIER FREE · BE FOUND
+누구나 이해하고, 누구도 배제하지 않고, 누구도 놓치지 않는 화재 대피 매뉴얼
 
 ## Run
 
