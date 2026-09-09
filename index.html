@@ -32,8 +32,8 @@
   <main class="phone">
     <header class="app-header"><div class="brand"><span>BF</span> Manual</div></header>
     <nav class="steps" aria-label="대피 안내 단계">
-      <button data-step="1" class="active"><b>1</b><span>상태 확인</span></button>
-      <button data-step="2"><b>2</b><span>현재 위치</span></button>
+      <button data-step="1" class="active"><b>1</b><span>메인 기능</span></button>
+      <button data-step="2"><b>2</b><span>환자 상태</span></button>
       <button data-step="3"><b>3</b><span>AI 분석</span></button>
       <button data-step="4"><b>4</b><span>대피 안내</span></button>
     </nav>
@@ -46,7 +46,7 @@
         <button class="emergency-card aid-card" data-help="aid"><svg><use href="#icon-heart"/></svg><strong>응급</strong><small>준비 중인 기능</small></button>
       </div>
       <button class="ar-entry" id="homeArStart"><svg><use href="#icon-camera"/></svg><span><strong>AR 대피</strong><small>카메라로 탈출 방향 확인</small></span><b>›</b></button>
-      <button class="location-card" data-go="3"><svg><use href="#icon-pin"/></svg><span><small>현재 선택 위치</small><strong id="locationText">전시동 2층 205호실</strong></span><b>›</b></button>
+      <button class="location-card kakao-location" id="kakaoLocation"><svg><use href="#icon-share"/></svg><span><small>카카오톡 위치 전송</small><strong>친구에게 현재 위치와 메시지 보내기</strong></span><b>›</b></button>
     </section>
 
     <section class="screen" data-screen="2">
@@ -71,9 +71,8 @@
       <p class="eyebrow"><svg><use href="#icon-shield"/></svg> 화재 위치 기반 대피 안내</p><h1>대피 안내 결과</h1>
       <div class="hazard result-hazard"><svg><use href="#icon-alert"/></svg><span><strong>중앙 비상구 인근에서 화재와 연기가 감지되었습니다.</strong><small>2층 중앙 비상구는 이용하지 마세요.</small></span></div>
       <div class="result-card"><small>현재 위치</small><strong id="resultLocation">전시동 2층 205호실</strong><small>이동 상태</small><strong id="resultStatus">혼자서 이동할 수 있어요</strong><small>가장 가까운 안전한 비상구</small><strong id="resultExit">2층 서쪽 비상구</strong></div>
-      <details class="agent-card"><summary>AI Agent 판단 과정</summary><p id="agentSummary"></p></details>
-      <div class="ai-brief" id="aiBrief"><small>BF Manual AI</small><strong>상황에 맞는 대피 안내를 준비하고 있습니다.</strong><p id="aiGuide">화재·연기·현재 위치 정보를 분석 중입니다.</p></div>
-      <button class="primary" id="arStart">탈출 안내 시작 <b>›</b></button><button class="action blue" id="guardian"><svg><use href="#icon-share"/></svg>보호자에게 알리기</button><button class="action" id="manager">관리자에게 알리기</button>
+      <button class="ai-brief ai-escape" id="arStart"><small>BF Manual AI · 탈출 안내</small><strong>상황에 맞는 대피 안내를 준비하고 있습니다.</strong><p id="aiGuide">화재·연기·현재 위치 정보를 분석 중입니다.</p><span>탈출 안내 시작 <b>›</b></span></button>
+      <div class="notify-actions"><button class="action blue" id="guardian"><svg><use href="#icon-share"/></svg>보호자에게 알리기</button><button class="action" id="manager">관리자에게 알리기</button></div>
     </section>
 
     <section class="screen ar-screen" data-screen="5">
