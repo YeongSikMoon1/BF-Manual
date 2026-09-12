@@ -15,6 +15,7 @@ function segmentCrossesInterior(a,b,[x1,y1,x2,y2]){
 
 test('every floor keeps each room connected to a mapped exit',()=>{
  for(const [floor,graph] of Object.entries(navigation)){
+  assert.ok(Object.keys(graph.exitNodes).length>1,`${floor}: rerouting needs at least two exits`);
   const exits=new Set(Object.values(graph.exitNodes));
   for(const [roomId,[,door,entry]] of Object.entries(graph.rooms)){
    assert.ok(graph.nodes[entry],`${floor}/${roomId}: missing corridor entry ${entry}`);
