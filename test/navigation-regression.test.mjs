@@ -70,6 +70,11 @@ test('2f rooms choose the nearest reachable exit by corridor distance',()=>{
  for(const [roomId,exit] of Object.entries(expected))assert.equal(nearestExitWithoutHazards('2f',roomId),exit,`2f/${roomId}: should use ${exit}`);
 });
 
+test('3f room 304 leaves through a room door without crossing the escalator',()=>{
+ assert.equal(nearestExitWithoutHazards('3f','304'),'동쪽 비상구');
+ for(const node of ['topL','top1','top2','top3','upperRight'])assert.ok(navigation['3f'].nodes[node][1]>=35,`${node}: overlaps the escalator zone`);
+});
+
 test('route selection prioritizes hazard clearance before distance',()=>{
  const short={exit:['가까운 출구'],path:[[0,0],[5,0],[10,0]]},safe={exit:['안전한 출구'],path:[[0,0],[0,10],[10,10]]};
  assert.equal(chooseSafestRoute([short,safe],[{x:5,y:2,radius:1}]).exit[0],'안전한 출구');
@@ -82,8 +87,8 @@ test('a fire or smoke radius blocks an intersecting route segment',()=>{
  assert.equal(isRouteSegmentClear(a,b,[{...hazard,y:4}],0),true);
 });
 
-test('AR distance stays fixed while an obstacle is detected',()=>{
- assert.deepEqual(advanceArDistance(12,{obstacle:true,heading:0,target:0}),{distance:12,reason:'obstacle'});
+test('AR distance keeps moving until the user chooses a detour',()=>{
+ assert.deepEqual(advanceArDistance(12,{obstacle:true,heading:0,target:0}),{distance:11.3,reason:'advanced'});
 });
 
 test('obstacle vision ignores small objects and keeps large central blockers',()=>{

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check app.js && node --check server.mjs && node --check evacuation-agent.mjs",
+    "check": "node --check app.js && node --check guardian.js && node --check server.mjs && node --check evacuation-agent.mjs",
     "test": "node --test"
   },
   "dependencies": {

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>보호자 대피 현황 · BF Manual</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="guardian.css">
+</head>
+<body>
+  <main class="guardian-page">
+    <header><div class="brand"><span>BF</span> Manual</div><small>보호자용 대피 현황</small></header>
+    <section class="state-card" id="stateCard"><span class="state-dot"></span><div><small>현재 상태</small><strong id="trackingState">연결 중</strong><p id="trackingStopped">최신 위치를 확인하고 있습니다.</p></div></section>
+    <section class="tracking-map"><img id="trackingMapImage" alt="대피자 이동 경로"><svg id="trackingMapRoute" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><span id="trackingWalker" class="tracking-walker" aria-label="대피자 현재 위치">●</span></section>
+    <section class="details"><div><small>현재 위치</small><strong id="trackingLocation">확인 중</strong></div><div><small>대피 진행률</small><strong id="trackingProgress">0%</strong></div><div><small>이동 상태</small><strong id="trackingMobility">확인 중</strong></div><div><small>목표 비상구</small><strong id="trackingExit">확인 중</strong></div></section>
+    <p class="updated" id="trackingUpdated" role="status">5초마다 자동으로 갱신합니다.</p>
+  </main>
+  <script type="module" src="guardian.js"></script>
+</body>
+</html>

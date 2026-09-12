@@ -1,0 +1,10 @@
+const $=selector=>document.querySelector(selector);
+const floorImages={b1:'assets/지하평면도.png','1f':'assets/전시동 1층.png','2f':'assets/전시동 2층.png','3f':'assets/전시동 3층.png'};
+
+function elapsedText(timestamp){const seconds=Math.max(0,Math.floor((Date.now()-timestamp)/1000));if(seconds<60)return`${seconds}초`;const minutes=Math.floor(seconds/60);return minutes<60?`${minutes}분`:`${Math.floor(minutes/60)}시간 ${minutes%60}분`}
+function renderTracking(session){
+ const card=$('#stateCard'),stopped=!session.completed&&Date.now()-session.lastMovedAt>60000,state=session.completed?'대피 완료':stopped?'이동 멈춤':'이동 중';card.classList.toggle('stopped',stopped);card.classList.toggle('complete',session.completed);$('#trackingState').textContent=state;$('#trackingStopped').textContent=session.completed?'안전지대 도착이 확인되었습니다.':stopped?`${elapsedText(session.lastMovedAt)} 동안 같은 구역에 머물고 있습니다.`:'대피 경로를 따라 이동하고 있습니다.';$('#trackingMapImage').src=floorImages[session.floorKey]||'';$('#trackingMapRoute').innerHTML=`<polyline points="${session.path.map(point=>point.join(',')).join(' ')}"/>`;$('#trackingWalker').style.cssText=`left:${session.point[0]}%;top:${session.point[1]}%`;$('#trackingLocation').textContent=session.completed?'안전지대':session.location;$('#trackingProgress').textContent=`${session.progress}% · 약 ${Math.ceil(session.remaining||0)}m 남음`;$('#trackingMobility').textContent=session.mobility;$('#trackingExit').textContent=session.exit;$('#trackingUpdated').textContent=`마지막 갱신 ${elapsedText(session.updatedAt)} 전 · 5초마다 자동 갱신`;
+}
+async function refreshTracking(id){try{const response=await fetch(`/api/evacuation-session?id=${encodeURIComponent(id)}`),data=await response.json();if(!response.ok)throw new Error(data.error);renderTracking(data)}catch(error){$('#trackingState').textContent='현황 확인 불가';$('#trackingStopped').textContent=error.message||'잠시 후 다시 확인해주세요.'}}
+const trackingId=new URLSearchParams(location.search).get('track');
+if(trackingId){refreshTracking(trackingId);setInterval(()=>refreshTracking(trackingId),5000)}else{$('#trackingState').textContent='연결 정보 없음';$('#trackingStopped').textContent='카카오톡으로 전달받은 위치 확인 버튼을 다시 눌러주세요.'}
