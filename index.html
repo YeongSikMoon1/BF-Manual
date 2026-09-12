@@ -61,7 +61,7 @@
 
     <section class="screen" data-screen="3">
       <button class="back" data-go="2">‹&nbsp; 뒤로</button><h1>현재 위치를<br>선택해주세요</h1>
-      <div class="floor-tabs"><button data-floor="b1">B1</button><button data-floor="1f">1F</button><button data-floor="2f" class="selected">2F</button><button data-floor="3f">3F</button></div>
+      <div class="floor-tabs" role="tablist" aria-label="현재 층 선택"><button type="button" role="tab" data-floor="b1" aria-selected="false">B1</button><button type="button" role="tab" data-floor="1f" aria-selected="false">1F</button><button type="button" role="tab" data-floor="2f" class="selected" aria-selected="true">2F</button><button type="button" role="tab" data-floor="3f" aria-selected="false">3F</button></div>
       <div class="map-card"><img id="map" src="assets/전시동 2층.png" alt="전시동 2층 평면도"><div id="mapOverlay" class="map-overlay"></div></div>
       <div class="hazard"><svg><use href="#icon-alert"/></svg><span><strong id="hazardTitle">화재 위치 분석 중</strong><small id="hazardDescription">위험 구역을 피하고 안전한 경로로 안내합니다.</small></span><button type="button" disabled>분석 완료</button></div>
       <h2 id="locationGroupTitle">현재 위치를 선택하세요</h2><div class="rooms" id="rooms"></div><button class="primary" data-next="4">다음 <b>›</b></button>
@@ -77,8 +77,10 @@
 
     <section class="screen ar-screen" data-screen="5">
       <video id="arCamera" autoplay muted playsinline aria-label="AR 대피용 후면 카메라"></video>
+      <canvas id="obstacleCanvas" class="obstacle-canvas" aria-hidden="true"></canvas>
       <div class="ar-shade" aria-hidden="true"></div>
       <header class="ar-header"><button id="arClose" aria-label="AR 대피 화면 닫기">‹</button><div><small>AR 대피 안내</small><strong id="arExitName">안전한 비상구 탐색 중</strong></div><span class="camera-live"><i></i> LIVE</span></header>
+      <p class="obstacle-status" id="obstacleStatus" role="status">장애물 인식 준비 중</p>
       <div class="ar-guidance">
         <div class="ar-arrow-wrap"><div class="ar-arrow" id="arArrow" aria-hidden="true"><span></span></div><i class="ar-origin-point" aria-hidden="true"></i></div>
         <strong id="arDirection">앞쪽으로 이동하세요</strong>

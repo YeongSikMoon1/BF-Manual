@@ -17,8 +17,11 @@ const navigation={
  '1f':{rooms:{
   hall1:[[17,25,39,48],[32,52],'c2','서쪽 비상구'],hall2:[[40,27,61,51],[51,53],'c3','동쪽 비상구'],
   hall3:[[62,31,82,53],[72,55],'c4','동북쪽 비상구'],multi:[[13,64,43,83],[38,62],'c2','서쪽 비상구']},
-  nodes:{west:[8.1,49.2],c1:[18,57],c2:[36,57],c3:[55,58],c4:[73,59],c5:[86,59],ne:[91.7,41.1],east:[92.6,67.9],se:[90.7,77.9],south1:[50.6,93.3],south2:[74,92.6]},
-  links:[['west','c1'],['c1','c2'],['c2','c3'],['c3','c4'],['c4','c5'],['c5','ne'],['c5','east'],['east','se']],
+  nodes:{west:[8.1,49.2],c1:[18,57],c2:[36,57],c3:[55,58],c4:[73,59],c5:[86,59],eastNorth:[89,49],ne:[91.7,41.1],east:[92.6,67.9],se:[90.7,77.9],south1:[50.6,93.3],south2:[74,92.6]},
+  // The east exits are reached through the east-side corridor. The south exits are
+  // intentionally not linked: the drawing does not show a verified public corridor
+  // from the selectable rooms to those doors.
+  links:[['west','c1'],['c1','c2'],['c2','c3'],['c3','c4'],['c4','c5'],['c5','eastNorth'],['eastNorth','ne'],['c5','east'],['east','se']],
   exitNodes:{'서쪽 비상구':'west','남서쪽 비상구':'south1','남쪽 비상구':'south2','동북쪽 비상구':'ne','동쪽 비상구':'east','동남쪽 비상구':'se'}},
  '2f':{rooms:{
   '201':[[13,55.5,18.5,63],[18,54],'u1','서쪽 비상구'],'202':[[19.5,55.5,26,63],[23,54],'u2','서쪽 비상구'],
@@ -36,8 +39,10 @@ const navigation={
   '304':[[51,37,64,53],[63.5,52],'midR','동쪽 비상구'],'303':[[23,61,36,75],[24,75.5],'lower1','서북쪽 비상구'],
   '305':[[37,61,50,75],[38,75.5],'lower2','서북쪽 비상구'],'306':[[51,61,64,75],[63.5,61],'midR','동쪽 비상구'],
   '307':[[74,48,86,68],[86,57],'eastCorr','동쪽 비상구']},
-  nodes:{nw:[20.5,25.9],topL:[20,32],top1:[25,32],top2:[49.5,32],top3:[61,32],midR:[66,57],eastCorr:[88,57],east:[90.6,54.1],lowerL:[20,78],lower1:[24,78],lower2:[38,78],lower3:[60,78]},
-  links:[['nw','topL'],['topL','top1'],['top1','top2'],['top2','top3'],['top3','midR'],['midR','eastCorr'],['eastCorr','east'],['topL','lowerL'],['lowerL','lower1'],['lower1','lower2'],['lower2','lower3'],['lower3','midR']],
+  nodes:{nw:[20.5,25.9],topL:[20,32],top1:[25,32],top2:[49.5,32],top3:[61,32],upperRight:[66,32],midR:[66,57],eastCorr:[88,57],east:[90.6,54.1],lowerL:[20,78],lower1:[24,78],lower2:[38,78],lower3:[60,78],lowerRight:[66,78]},
+  // upperRight/lowerRight keep the route inside the right-hand corridor. The old
+  // lower3 -> midR diagonal crossed the wall and the interior of room 306.
+  links:[['nw','topL'],['topL','top1'],['top1','top2'],['top2','top3'],['top3','upperRight'],['upperRight','midR'],['midR','eastCorr'],['eastCorr','east'],['topL','lowerL'],['lowerL','lower1'],['lower1','lower2'],['lower2','lower3'],['lower3','lowerRight'],['lowerRight','midR']],
   exitNodes:{'서북쪽 비상구':'nw','동쪽 비상구':'east'}}
 };
 
@@ -64,6 +69,9 @@ function segmentDistance(x,y,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,M
 function pathLength(path){return path.slice(1).reduce((n,p,i)=>n+Math.hypot(p[0]-path[i][0],p[1]-path[i][1]),0)}
 function planRoute(){
  const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2];
+ // A route may leave a room only through its mapped hinged door. Every following
+ // edge is a pre-validated corridor segment; no arbitrary node-to-node shortcut is
+ // generated from the raster image.
  const nodes={...nav.nodes,start,door},links=[...nav.links,['start','door'],['door',entry]],strict=shortestRoutes(nodes,links,true);
  let candidates=floorData[floor].exits.map(exit=>{const names=strict[nav.exitNodes[exit[0]]];return names&&{exit,path:names.map(name=>nodes[name]),blocked:false}}).filter(Boolean);
  if(!candidates.length){const nearest=[...floorData[floor].exits].sort((a,b)=>Math.hypot(a[1]-door[0],a[2]-door[1])-Math.hypot(b[1]-door[0],b[2]-door[1]))[0];return{exit:nearest,path:[start,door],blocked:true,noPath:true}}
@@ -71,7 +79,7 @@ function planRoute(){
 }
 function shortestRoutes(nodes,links,strict){
  const graph={};Object.keys(nodes).forEach(k=>graph[k]=[]);
- links.forEach(([a,b])=>{const requiredEgress=['start','door'].includes(a)||['start','door'].includes(b),clear=requiredEgress||edgeClear(nodes[a],nodes[b]),risk=clear?0:1000;if(strict&&!clear)return;const cost=Math.hypot(nodes[a][0]-nodes[b][0],nodes[a][1]-nodes[b][1])+risk;graph[a].push([b,cost]);graph[b].push([a,cost])});
+ links.forEach(([a,b])=>{if(!nodes[a]||!nodes[b])return;const clear=edgeClear(nodes[a],nodes[b]),risk=clear?0:1000;if(strict&&!clear)return;const cost=Math.hypot(nodes[a][0]-nodes[b][0],nodes[a][1]-nodes[b][1])+risk;graph[a].push([b,cost]);graph[b].push([a,cost])});
  const dist={start:0},paths={start:['start']},queue=['start'];
  while(queue.length){queue.sort((a,b)=>dist[a]-dist[b]);const at=queue.shift();graph[at].forEach(([next,cost])=>{const value=dist[at]+cost;if(value<(dist[next]??Infinity)){dist[next]=value;paths[next]=[...paths[at],next];if(!queue.includes(next))queue.push(next)}})}
  return paths;
@@ -86,8 +94,8 @@ async function requestAiGuide(){const brief=$('#aiBrief'),guide=$('#aiGuide');br
 function show(step){if(step!==5)stopAr();$('.phone').classList.toggle('ar-mode',step===5);$$('.screen').forEach(x=>x.classList.toggle('active',x.dataset.screen===String(step)));$$('.steps button').forEach(x=>x.classList.toggle('active',x.dataset.step===String(step)));if(step===3)renderFloor();if(step===4)renderResult()}
 function renderFloor(){
  const data=floorData[floor],overlay=$('#mapOverlay'),route=planRoute(),selected=currentLocation(),point=randomPointFor(floor,selected[0]),img=$('#map');
- $$('[data-floor]').forEach(tab=>tab.classList.toggle('selected',tab.dataset.floor===floor));
- img.src=data.image;img.alt=`${data.name} 평면도`;$('#locationGroupTitle').textContent='현재 위치를 선택하세요';overlay.replaceChildren();drawRoute(overlay,route);
+ $$('[data-floor]').forEach(tab=>{const active=tab.dataset.floor===floor;tab.classList.toggle('selected',active);tab.setAttribute('aria-selected',String(active))});
+ img.src=data.image;img.alt=`전시동 ${data.name} 평면도`;$('#locationGroupTitle').textContent=`${data.name} 공간을 선택하세요`;overlay.replaceChildren();drawRoute(overlay,route);
  const marker=document.createElement('span');marker.className='selected-location';marker.style.cssText=`left:${point[0]}%;top:${point[1]}%`;marker.title=`${selected[1]} 내부 현재 위치`;overlay.append(marker);hazards().forEach(h=>renderHazard(overlay,h));
  const count=hazards().length,activeFloors=Object.entries(hazardsByFloor).filter(([,list])=>list.length).map(([key])=>floorData[key].name);
  $('#hazardTitle').textContent=count?`화재·연기 감지: ${hazards().map(h=>h.item[1]).join(', ')}`:`현재 ${activeFloors.join('과 ')}에 화재가 진행되고 있습니다.`;
@@ -96,10 +104,18 @@ function renderFloor(){
 }
 function drawRoute(overlay,route){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','route-layer');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('preserveAspectRatio','none');const points=route.path.map(p=>p.join(',')).join(' ');svg.innerHTML=`<polyline class="route-shadow" points="${points}"/><polyline class="route-line" points="${points}"/>${route.noPath?'':`<circle class="route-end" cx="${route.exit[1]}" cy="${route.exit[2]}" r=".7"/>`}`;overlay.append(svg);if(route.noPath)return;const destination=document.createElement('span');destination.className='route-destination';destination.textContent='출구';destination.style.cssText=`left:${route.exit[1]}%;top:${route.exit[2]}%`;destination.title=route.exit[0];overlay.append(destination)}
 function renderButtons(){const box=$('#rooms');box.replaceChildren();floorData[floor].locations.forEach(([id,label])=>{const b=document.createElement('button');b.textContent=label;b.classList.toggle('selected',id===locationId);b.onclick=()=>selectLocation(id);box.append(b)})}
-function selectLocation(id){locationId=id;const item=currentLocation();randomPointFor(floor,id);$('#locationText').textContent=`${floorData[floor].name} ${item[1]}`;renderFloor()}
+function selectLocation(id){
+ if(!navigation[floor].rooms[id])return;
+ locationId=id;randomPointFor(floor,id);renderFloor();
+}
+function selectFloor(nextFloor){
+ if(!floorData[nextFloor]||!navigation[nextFloor])return;
+ floor=nextFloor;locationId=floorData[floor].locations[0][0];
+ renderFloor();
+}
 function renderHazard(overlay,{item,scale}){const [,label,x,y]=item,smoke=document.createElement('span'),fire=document.createElement('span');smoke.className='smoke-zone';smoke.style.cssText=`left:${x}%;top:${y}%;--scale:${scale}`;smoke.title=`${label} 연기 범위`;fire.className='fire-point';fire.style.cssText=`left:${x}%;top:${y}%`;fire.title=`${label} 화재`;fire.innerHTML='<svg aria-hidden="true"><use href="#icon-fire"/></svg>';overlay.append(smoke,fire)}
 function renderResult(){const data=floorData[floor],item=currentLocation(),route=planRoute(),exit=route.exit[0];$('#resultLocation').textContent=`${data.name} ${item[1]}`;$('#resultStatus').textContent=mobility;$('#resultExit').textContent=/휠체어|어려워/.test(mobility)?`${exit} 인근 안전 대피장소`:exit;$('.result-hazard strong').textContent=hazards().length?`${hazards().map(h=>h.item[1]).join(', ')}에서 화재와 연기가 감지되었습니다.`:`현재 ${Object.entries(hazardsByFloor).filter(([,v])=>v.length).map(([k])=>floorData[k].name).join('과 ')}에 화재가 진행되고 있습니다.`;$('.result-hazard small').textContent=route.blocked?'안전한 통로가 확보될 때까지 안내 요원의 지시를 기다리세요.':`${exit} 방향으로 연기 구역을 우회하세요.`;requestAiGuide()}
-$$('[data-step],[data-go]').forEach(b=>b.onclick=()=>show(Number(b.dataset.step||b.dataset.go)));$$('[data-help]').forEach(b=>b.onclick=()=>show(2));$$('[data-next]').forEach(b=>b.onclick=()=>show(Number(b.dataset.next)));$$('[data-status]').forEach(b=>b.onclick=()=>{$$('[data-status]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');mobility=b.dataset.status;$('.primary.disabled')?.classList.remove('disabled')});$$('[data-floor]').forEach(b=>b.onclick=()=>{floor=b.dataset.floor;locationId=floorData[floor].locations[0][0];$$('[data-floor]').forEach(x=>x.classList.toggle('selected',x.dataset.floor===floor));selectLocation(locationId)});
+$$('[data-step],[data-go]').forEach(b=>b.onclick=()=>show(Number(b.dataset.step||b.dataset.go)));$$('[data-help]').forEach(b=>b.onclick=()=>show(2));$$('[data-next]').forEach(b=>b.onclick=()=>show(Number(b.dataset.next)));$$('[data-status]').forEach(b=>b.onclick=()=>{$$('[data-status]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');mobility=b.dataset.status;$('.primary.disabled')?.classList.remove('disabled')});$$('[data-floor]').forEach(b=>b.onclick=event=>{event.preventDefault();selectFloor(b.dataset.floor)});
 function modal(title,text){$('#modalTitle').textContent=title;$('#modalText').textContent=text;$('#modal').classList.add('open')}
 function alertSummary(recipient){const item=currentLocation(),route=planRoute(),detected=hazards().length?hazards().map(h=>h.item[1]).join(', '):'현재 층 감지 없음';return`${recipient}에게 아래 내용을 전달합니다.\n\n현재 위치: ${floorData[floor].name} ${item[1]}\n이동 상태: ${mobility}\n화재·연기 위치: ${detected}\n추천 대피 지점: ${route.exit[0]}\n안내 상태: ${route.blocked?'안전한 통로 확인 필요':'연기 구역을 우회하는 경로 확보'}`}
 function friendLocationSummary(){const item=currentLocation();return`친구에게 카카오톡 메시지를 전송합니다.\n\n현재 위치: 김대중컨벤션센터 전시동 ${floorData[floor].name} ${item[1]}\n메시지: 현재 이 위치에 있어요. 제 위치를 확인해주세요.`}
@@ -111,6 +127,8 @@ async function shareKakaoLocation(){
  catch(error){modal('카카오톡 위치 전송 준비 필요',`${error.message}\n\n배포 주소를 카카오 개발자 콘솔의 JavaScript SDK 도메인과 제품 링크 웹 도메인에 등록해주세요.\n\n${friendLocationSummary()}`)}
 }
 let cameraStream=null,torchOn=false,sensorActive=false,voiceOn=true,signalOn=false,signalTimer=null,audioContext=null,remainingDistance=24,lastStepAt=0,lastMagnitude=0,targetBearing=0,currentHeading=null,lastDirection='',lastSpokenAt=0,lastDistanceCallout=Infinity,lastWrongWayAt=0,arSteps=[],arStepIndex=0,arCompleted=false,arDestinationName='비상구';
+let obstacleModel=null,obstacleTimer=null,obstacleBusy=false,obstacleBlocked=false,lastObstacleWarningAt=0;
+const obstacleLabels=new Set(['person','bicycle','car','motorcycle','bus','truck','bench','chair','couch','bed','dining table','potted plant','suitcase']);
 function segmentBearing(a,b){return(Math.atan2(b[0]-a[0],a[1]-b[1])*180/Math.PI+360)%360}
 function headingDifference(a,b){return Math.abs(((a-b+540)%360)-180)}
 function buildArSteps(route){
@@ -122,7 +140,7 @@ function updateDirection(rotation){const normalized=((rotation+540)%360)-180;$('
 async function startAr(){
  const route=planRoute(),item=currentLocation();arDestinationName=route.exit[0];arSteps=buildArSteps(route);arCompleted=false;currentHeading=null;lastWrongWayAt=0;$('#arLocation').textContent=`${floorData[floor].name} ${item[1]}`;show(5);activateArStep(0,false);updateDirection(targetBearing);
  if(!navigator.mediaDevices?.getUserMedia){$('#arMessage').textContent='이 브라우저에서는 카메라를 사용할 수 없습니다.';return}
- try{const result=await connectBestCamera();$('#arCamera').srcObject=cameraStream;$('#torchButton').disabled=!result.torch;$('#arMessage').textContent=result.torch?`손전등 지원 카메라 연결됨 · ${result.label}`:`후면 카메라 연결됨 · 손전등 미지원`;speakGuide(`${route.exit[0]}까지 안내를 시작합니다. ${arSteps[0].text}`,true);await enableSensors(false)}catch(error){$('#arMessage').textContent=error.name==='NotAllowedError'?'카메라 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.':'후면 카메라를 시작할 수 없습니다.'}
+ try{const result=await connectBestCamera();$('#arCamera').srcObject=cameraStream;$('#torchButton').disabled=!result.torch;$('#arMessage').textContent=result.torch?`손전등 지원 카메라 연결됨 · ${result.label}`:`후면 카메라 연결됨 · 손전등 미지원`;speakGuide(`${route.exit[0]}까지 안내를 시작합니다. ${arSteps[0].text}`,true);await enableSensors(false);startObstacleDetection()}catch(error){$('#arMessage').textContent=error.name==='NotAllowedError'?'카메라 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.':'후면 카메라를 시작할 수 없습니다.'}
 }
 async function openCamera(video){return navigator.mediaDevices.getUserMedia({video:{...video,width:{ideal:1280},height:{ideal:720}},audio:false})}
 async function connectBestCamera(){
@@ -134,11 +152,36 @@ async function connectBestCamera(){
  cameraStream=await openCamera({facingMode:{ideal:'environment'}});const track=cameraStream.getVideoTracks()[0];return{torch:!!(track.getCapabilities?.()||{}).torch,label:track.label||'후면 카메라'}
 }
 function cameraPriority(label=''){return/(back|rear|environment|후면|뒷면)/i.test(label)?2:/(front|user|전면)/i.test(label)?0:1}
-function stopAr(){if(cameraStream){cameraStream.getTracks().forEach(track=>track.stop());cameraStream=null}torchOn=false;stopSignal();window.speechSynthesis?.cancel();$('#torchButton')?.classList.remove('active');if($('#torchButton'))$('#torchButton').disabled=true}
+function loadVisionScript(src,ready){return new Promise((resolve,reject)=>{if(ready())return resolve();const existing=document.querySelector(`script[src="${src}"]`);if(existing){existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return}const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=reject;document.head.append(script)})}
+async function loadObstacleModel(){
+ if(obstacleModel)return obstacleModel;
+ $('#obstacleStatus').textContent='장애물 인식 모델 불러오는 중';
+ await loadVisionScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js',()=>!!window.tf);
+ await loadVisionScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',()=>!!window.cocoSsd);
+ obstacleModel=await window.cocoSsd.load({base:'lite_mobilenet_v2'});return obstacleModel;
+}
+function drawObstacleBoxes(predictions,blocking){
+ const video=$('#arCamera'),canvas=$('#obstacleCanvas'),ctx=canvas.getContext('2d'),width=video.videoWidth||640,height=video.videoHeight||480;
+ if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height}ctx.clearRect(0,0,width,height);
+ predictions.forEach(({bbox,class:label,score})=>{const [x,y,w,h]=bbox,isBlocking=blocking.some(item=>item.bbox===bbox);ctx.strokeStyle=isBlocking?'#ff3344':'#40e28d';ctx.lineWidth=Math.max(3,width/180);ctx.strokeRect(x,y,w,h);ctx.fillStyle=isBlocking?'#c51627dd':'#087a4bdd';ctx.font=`bold ${Math.max(14,width/42)}px sans-serif`;ctx.fillText(`${label} ${Math.round(score*100)}%`,x+4,Math.max(20,y-7))})
+}
+async function detectObstacles(){
+ const video=$('#arCamera');if(obstacleBusy||!cameraStream||!obstacleModel||video.readyState<2)return;obstacleBusy=true;
+ try{const predictions=(await obstacleModel.detect(video,8,.55)).filter(item=>obstacleLabels.has(item.class)),width=video.videoWidth||1,height=video.videoHeight||1,blocking=predictions.filter(({bbox,class:label})=>{const [x,y,w,h]=bbox,center=x+w/2,area=w*h/(width*height);return center>width*.2&&center<width*.8&&y+h>height*.48&&area>(label==='person'?.09:.045)});drawObstacleBoxes(predictions,blocking);setObstacleState(blocking)}finally{obstacleBusy=false}
+}
+function setObstacleState(blocking){
+ obstacleBlocked=blocking.length>0;const status=$('#obstacleStatus'),screen=$('.ar-screen');screen.classList.toggle('obstacle-blocked',obstacleBlocked);status.classList.toggle('detected',obstacleBlocked);
+ if(!obstacleBlocked){status.textContent='장애물 인식 중';return}const labels=[...new Set(blocking.map(item=>item.class))].join(', ');status.textContent=`전방 장애물 감지 · ${labels}`;$('#arMessage').textContent='멈추세요. 전방 장애물을 피해 안전을 확인하세요.';const now=Date.now();if(now-lastObstacleWarningAt>5000){lastObstacleWarningAt=now;speakGuide('멈추세요. 전방에 장애물이 감지되었습니다.',true)}
+}
+async function startObstacleDetection(){
+ stopObstacleDetection();try{await loadObstacleModel();if(!cameraStream)return;$('#obstacleStatus').textContent='장애물 인식 중';obstacleTimer=setInterval(detectObstacles,850);detectObstacles()}catch{$('#obstacleStatus').textContent='장애물 인식을 시작할 수 없습니다.'}
+}
+function stopObstacleDetection(){if(obstacleTimer){clearInterval(obstacleTimer);obstacleTimer=null}obstacleBlocked=false;obstacleBusy=false;const canvas=$('#obstacleCanvas'),ctx=canvas?.getContext('2d');if(ctx)ctx.clearRect(0,0,canvas.width,canvas.height);$('#obstacleStatus')?.classList.remove('detected');$('.ar-screen')?.classList.remove('obstacle-blocked')}
+function stopAr(){stopObstacleDetection();if(cameraStream){cameraStream.getTracks().forEach(track=>track.stop());cameraStream=null}torchOn=false;stopSignal();window.speechSynthesis?.cancel();$('#torchButton')?.classList.remove('active');if($('#torchButton'))$('#torchButton').disabled=true}
 async function toggleTorch(){const track=cameraStream?.getVideoTracks()[0];if(!track)return;try{torchOn=!torchOn;await track.applyConstraints({advanced:[{torch:torchOn}]});$('#torchButton').classList.toggle('active',torchOn);$('#torchButton').setAttribute('aria-pressed',String(torchOn))}catch{torchOn=false;$('#arMessage').textContent='현재 선택된 카메라의 손전등을 제어할 수 없습니다.'}}
 async function enableSensors(showMessage=true){try{if(typeof DeviceOrientationEvent?.requestPermission==='function'){const result=await DeviceOrientationEvent.requestPermission();if(result!=='granted')throw new Error('denied')}if(typeof DeviceMotionEvent?.requestPermission==='function'){const result=await DeviceMotionEvent.requestPermission();if(result!=='granted')throw new Error('denied')}if(!sensorActive){window.addEventListener('deviceorientation',onOrientation,true);window.addEventListener('devicemotion',onMotion,true);sensorActive=true}$('#sensorButton').classList.add('active');if(showMessage)$('#arMessage').textContent='방향 센서와 보행 감지가 켜졌습니다.'}catch{if(showMessage)$('#arMessage').textContent='센서 권한을 허용해야 방향과 보행을 감지할 수 있습니다.'}}
 function onOrientation(event){const heading=event.webkitCompassHeading??(event.alpha==null?null:360-event.alpha);if(heading==null)return;currentHeading=heading;updateDirection(targetBearing-heading)}
-function onMotion(event){if(!cameraStream||arCompleted)return;const a=event.accelerationIncludingGravity;if(!a)return;const magnitude=Math.hypot(a.x||0,a.y||0,a.z||0),delta=Math.abs(magnitude-lastMagnitude),now=Date.now();lastMagnitude=magnitude;if(delta>1.8&&delta<7&&now-lastStepAt>380){lastStepAt=now;const aligned=currentHeading!==null&&headingDifference(targetBearing,currentHeading)<=55;if(!aligned){$('#arMessage').textContent=currentHeading===null?'방향을 확인하는 중입니다. 센서 안내 후 이동하세요.':'잘못된 방향입니다. 화살표 방향으로 돌아서세요.';if(now-lastWrongWayAt>5000){lastWrongWayAt=now;speakGuide(currentHeading===null?'방향을 확인하고 있습니다. 잠시 기다려 주세요.':'잘못된 방향입니다. 화살표 방향으로 돌아서세요.',true)}return}$('#arMessage').textContent='올바른 방향으로 이동 중입니다.';remainingDistance=Math.max(0,+(remainingDistance-.7).toFixed(1));$('#arDistance').textContent=remainingDistance;if(remainingDistance<=lastDistanceCallout-5&&remainingDistance>0){lastDistanceCallout=remainingDistance;speakGuide(`${Math.ceil(remainingDistance)}미터 남았습니다.`)}if(remainingDistance===0&&arStepIndex<arSteps.length-1)activateArStep(arStepIndex+1);else if(remainingDistance===0){arCompleted=true;$('#arDirection').textContent='안전지대에 도착했습니다. 안내를 계속 유지합니다.';$('#arExitName').textContent='안전지대 도착 · 작동 중';$('#arMessage').textContent='카메라·음성·호출 신호가 계속 작동합니다.';speakGuide('안전지대에 도착했습니다. 안내 기능을 계속 유지합니다.',true)}}}
+function onMotion(event){if(!cameraStream||arCompleted)return;const a=event.accelerationIncludingGravity;if(!a)return;const magnitude=Math.hypot(a.x||0,a.y||0,a.z||0),delta=Math.abs(magnitude-lastMagnitude),now=Date.now();lastMagnitude=magnitude;if(delta>1.8&&delta<7&&now-lastStepAt>380){lastStepAt=now;if(obstacleBlocked){$('#arMessage').textContent='전방 장애물로 이동 거리를 멈췄습니다. 안전을 확인하세요.';return}const aligned=currentHeading!==null&&headingDifference(targetBearing,currentHeading)<=55;if(!aligned){$('#arMessage').textContent=currentHeading===null?'방향을 확인하는 중입니다. 센서 안내 후 이동하세요.':'잘못된 방향입니다. 화살표 방향으로 돌아서세요.';if(now-lastWrongWayAt>5000){lastWrongWayAt=now;speakGuide(currentHeading===null?'방향을 확인하고 있습니다. 잠시 기다려 주세요.':'잘못된 방향입니다. 화살표 방향으로 돌아서세요.',true)}return}$('#arMessage').textContent='올바른 방향으로 이동 중입니다.';remainingDistance=Math.max(0,+(remainingDistance-.7).toFixed(1));$('#arDistance').textContent=remainingDistance;if(remainingDistance<=lastDistanceCallout-5&&remainingDistance>0){lastDistanceCallout=remainingDistance;speakGuide(`${Math.ceil(remainingDistance)}미터 남았습니다.`)}if(remainingDistance===0&&arStepIndex<arSteps.length-1)activateArStep(arStepIndex+1);else if(remainingDistance===0){arCompleted=true;$('#arDirection').textContent='안전지대에 도착했습니다. 안내를 계속 유지합니다.';$('#arExitName').textContent='안전지대 도착 · 작동 중';$('#arMessage').textContent='카메라·음성·호출 신호가 계속 작동합니다.';speakGuide('안전지대에 도착했습니다. 안내 기능을 계속 유지합니다.',true)}}}
 function speakGuide(text,force=false){if(!voiceOn||!('speechSynthesis'in window)||(!force&&Date.now()-lastSpokenAt<3500))return;const utterance=new SpeechSynthesisUtterance(text);utterance.lang='ko-KR';utterance.rate=.92;utterance.pitch=1;speechSynthesis.cancel();speechSynthesis.speak(utterance);lastSpokenAt=Date.now()}
 function toggleVoice(){voiceOn=!voiceOn;$('#voiceButton').classList.toggle('active',voiceOn);$('#voiceButton').setAttribute('aria-pressed',String(voiceOn));if(voiceOn)speakGuide($('#arDirection').textContent,true);else window.speechSynthesis?.cancel()}
 function rescueBeep(){navigator.vibrate?.([250,120,250]);const AudioEngine=window.AudioContext||window.webkitAudioContext;if(!AudioEngine)return;audioContext??=new AudioEngine();const osc=audioContext.createOscillator(),gain=audioContext.createGain(),now=audioContext.currentTime;osc.type='square';osc.frequency.setValueAtTime(880,now);osc.frequency.setValueAtTime(1175,now+.18);gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.32,now+.02);gain.gain.linearRampToValueAtTime(.001,now+.42);osc.connect(gain).connect(audioContext.destination);osc.start(now);osc.stop(now+.45)}
