@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,floorData,isLargeBlockingObstacle,isRouteSegmentClear,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
+import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,floorData,isLargeBlockingObstacle,isRouteSegmentClear,isVisualPathBlocked,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
 
 function reachable(graph,start){
  const seen=new Set([start]),queue=[start];
@@ -89,6 +89,12 @@ test('obstacle vision ignores small objects and keeps large central blockers',()
  assert.equal(isLargeBlockingObstacle({class:'chair',bbox:[280,300,70,70]},640,480),false);
  assert.equal(isLargeBlockingObstacle({class:'chair',bbox:[180,170,300,270]},640,480),true);
  assert.equal(isLargeBlockingObstacle({class:'person',bbox:[0,80,200,380]},640,480),false);
+});
+
+test('unlabelled cluttered or dark scenes can trigger path blockage',()=>{
+ assert.equal(isVisualPathBlocked({contrast:48,edgeDensity:.22,darkRatio:.2}),true);
+ assert.equal(isVisualPathBlocked({contrast:20,edgeDensity:.05,darkRatio:.8}),true);
+ assert.equal(isVisualPathBlocked({contrast:24,edgeDensity:.08,darkRatio:.1}),false);
 });
 
 test('AR distance stays fixed when heading is wrong or unavailable',()=>{
