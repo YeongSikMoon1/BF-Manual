@@ -62,7 +62,7 @@ test('all surveyed hinged doors are mapped on every floor',()=>{
   b1:{'west-elevator':2,'control-room':2,'east-elevator':2,'west-parking':2,'central-parking':4,'south-parking':3,'east-ramp':3},
   '1f':{hall1:2,hall2:2,hall3:2,multi:1,auditorium:1},
   '2f':{'201':2,'202':2,'203':2,'204':2,'205':2,'206':2,'207':2,'208':1,'209':1,'210':1,'211':1,'212':1,'213':1,'214':1},
-  '3f':{'301':1,'302':1,'303':1,'304':2,'305':1,'306':2,'307':4}
+  '3f':{'301':2,'302':2,'303':2,'304':3,'305':2,'306':3,'307':4}
  };
  for(const [floor,rooms] of Object.entries(expected))for(const [roomId,count] of Object.entries(rooms)){
   const room=navigation[floor].rooms[roomId],portals=[[room[1],room[2]],...(room[4]||[])];
@@ -108,6 +108,19 @@ test('2f rooms choose the nearest reachable exit by corridor distance',()=>{
 test('3f room 304 leaves through a room door without crossing the escalator',()=>{
  assert.equal(nearestExitWithoutHazards('3f','304'),'동쪽 비상구');
  for(const node of ['topL','top1','top2','top3','upperRight'])assert.ok(navigation['3f'].nodes[node][1]>=35,`${node}: overlaps the escalator zone`);
+});
+
+test('3f connected rooms provide alternate exits without crossing the 305 side wall',()=>{
+ const graph=navigation['3f'];
+ for(const link of [['top1','lower1'],['top2','lower2'],['top3','lower3']])assert.ok(graph.links.some(edge=>edge[0]===link[0]&&edge[1]===link[1]),`missing open room passage ${link.join('->')}`);
+ for(const [from,to] of graph.links){
+  const a=graph.nodes[from],b=graph.nodes[to],crosses305Right=(a[0]-50)*(b[0]-50)<0&&Math.min(a[1],b[1])<75&&Math.max(a[1],b[1])>61;
+  assert.equal(crosses305Right,false,`${from}->${to} crosses the wall beside room 305`);
+ }
+ for(const roomId of ['301','302','303','304','305','306']){
+  const room=graph.rooms[roomId],seen=new Set();for(const [,entry] of [[room[1],room[2]],...(room[4]||[])])for(const node of reachable(graph,entry))seen.add(node);
+  assert.ok(seen.has(graph.exitNodes['서북쪽 비상구'])&&seen.has(graph.exitNodes['동쪽 비상구']),`${roomId}: both exits must remain available`);
+ }
 });
 
 test('route selection prioritizes hazard clearance before distance',()=>{

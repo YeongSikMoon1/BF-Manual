@@ -44,14 +44,15 @@ export const navigation={
   links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['hallExit','eastTurn'],['eastTurn','eastNorth'],['eastNorth','ne'],['eastTurn','east'],['west','d201'],['d201','d202'],['d202','d203'],['d203','c1'],['c1','d204'],['d204','d205'],['d205','d206'],['d206','c2'],['c2','d207'],['d207','lowerTop'],['c2','l1'],['c2','lowerTop'],['lowerTop','r1'],['r1','top214'],['top214','eastUpper'],['eastUpper','eastSide'],['eastSide','se'],['l1','l2'],['l2','l3'],['l3','l4'],['r1','r2'],['r2','r214'],['r214','r3'],['r3','r4'],['r4','south214'],['south214','eastLower'],['eastLower','se']],
   exitNodes:{'서북쪽 비상구':'nw','서쪽 비상구':'west','중앙 비상구 1':'c1','중앙 비상구 2':'c2','동북쪽 비상구':'ne','동쪽 비상구':'east','동측 복도 비상구':'hallExit','동남쪽 비상구':'se'}},
  '3f':{rooms:{
-  '301':[[23,37,36,53],[25,36],'top1','서북쪽 비상구'],'302':[[37,37,50,53],[38,36],'top2','서북쪽 비상구'],
-  '304':[[51,37,64,53],[52,36],'top3','동쪽 비상구',[[[63.5,52],'midR']]],'303':[[23,61,36,75],[24,75.5],'lower1','서북쪽 비상구'],
-  '305':[[37,61,50,75],[38,75.5],'lower2','서북쪽 비상구'],'306':[[51,61,64,75],[52,75.5],'lower3','동쪽 비상구',[[[63.5,61],'midR']]],
+  '301':[[23,37,36,53],[25,36],'top1','서북쪽 비상구',[[[24,75.5],'lower1']],'open-zone'],'302':[[37,37,50,53],[38,36],'top2','서북쪽 비상구',[[[38,75.5],'lower2']],'open-zone'],
+  '304':[[51,37,64,53],[52,36],'top3','동쪽 비상구',[[[63.5,52],'midR'],[[52,75.5],'lower3']],'open-zone'],'303':[[23,61,36,75],[24,75.5],'lower1','서북쪽 비상구',[[[25,36],'top1']],'open-zone'],
+  '305':[[37,61,50,75],[38,75.5],'lower2','서북쪽 비상구',[[[38,36],'top2']],'open-zone'],'306':[[51,61,64,75],[52,75.5],'lower3','동쪽 비상구',[[[63.5,61],'midR'],[[52,36],'top3']],'open-zone'],
   '307':[[74,48,86,68],[74,47],'eastTopL','동쪽 비상구',[[[84,47],'eastTopR'],[[86,57],'eastCorr'],[[74,68],'lowerRight']]]},
   nodes:{nw:[20.5,25.9],topL:[20,35],top1:[25,35],top2:[49.5,35],top3:[61,35],upperRight:[66,35],midR:[66,57],eastTopL:[70,44],eastTopR:[88,44],eastCorr:[88,57],east:[90.6,54.1],lowerL:[20,78],lower1:[24,78],lower2:[38,78],lower3:[60,78],lowerRight:[66,78]},
-  // upperRight/lowerRight keep the route inside the right-hand corridor. The old
-  // lower3 -> midR diagonal crossed the wall and the interior of room 306.
-  links:[['nw','topL'],['topL','top1'],['top1','top2'],['top2','top3'],['top3','upperRight'],['upperRight','midR'],['midR','eastTopL'],['eastTopL','eastTopR'],['eastTopR','eastCorr'],['eastCorr','east'],['topL','lowerL'],['lowerL','lower1'],['lower1','lower2'],['lower2','lower3'],['lower3','lowerRight'],['lowerRight','midR']],
+  // The vertically connected room pairs act as open internal passages between
+  // the upper and lower corridors. Their side walls remain closed: in particular
+  // there is no route through the wall between rooms 305 and 306.
+  links:[['nw','topL'],['topL','top1'],['top1','top2'],['top2','top3'],['top3','upperRight'],['upperRight','midR'],['midR','eastTopL'],['eastTopL','eastTopR'],['eastTopR','eastCorr'],['eastCorr','east'],['topL','lowerL'],['lowerL','lower1'],['lower1','lower2'],['lower2','lower3'],['lower3','lowerRight'],['lowerRight','midR'],['top1','lower1'],['top2','lower2'],['top3','lower3']],
   exitNodes:{'서북쪽 비상구':'nw','동쪽 비상구':'east'}}
 };
 
