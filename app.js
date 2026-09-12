@@ -25,14 +25,20 @@ export const navigation={
   exitNodes:{'서쪽 비상구':'west','남서쪽 비상구':'south1','남쪽 비상구':'south2','동북쪽 비상구':'ne','동쪽 비상구':'east','동남쪽 비상구':'se'}},
  '2f':{rooms:{
   '201':[[13,55.5,18.5,63],[18,54],'u1','서쪽 비상구'],'202':[[19.5,55.5,26,63],[23,54],'u2','서쪽 비상구'],
-  '203':[[27,55.5,33.5,63],[31,54],'u3','서쪽 비상구'],'204':[[34.5,55.5,41,63],[39,54],'u4','서쪽 비상구'],
+  '203':[[27,55.5,33.5,63],[31,54],'u3','서북쪽 비상구'],'204':[[34.5,55.5,41,63],[39,54],'u4','동측 복도 비상구'],
   '205':[[42,55.5,48.5,63],[46,54],'u5','동측 복도 비상구'],'206':[[49,55.5,56,63],[54,54],'u6','동측 복도 비상구'],
   '207':[[57,55.5,64,63],[62,54],'u7','동측 복도 비상구'],'208':[[57,68,63,74],[57,70],'l1','중앙 비상구 2'],
-  '209':[[64,68,69.5,74],[69.5,70],'r1','동남쪽 비상구'],'210':[[57,81.5,63,87],[57,84],'l3','중앙 비상구 2'],
-  '211':[[64,75,69.5,81],[69.5,77],'r2','동남쪽 비상구'],'212':[[64,82,69.5,87.5],[69.5,84],'r3','동남쪽 비상구'],
-  '213':[[57,87.5,63,92],[57,89.5],'l4','중앙 비상구 2'],'214':[[72,75,80,84],[71.5,79],'r214','동남쪽 비상구']},
-  nodes:{nw:[12.7,40.7],west:[8.7,65.7],u0:[10,52],u1:[18,52],u2:[23,52],u3:[31,52],u4:[39,52],u5:[46,52],u6:[54,52],u7:[62,52],u8:[72,52],hallExit:[76.8,50.4],u9:[82,52],c1:[36.8,65.7],c2:[52.1,65.9],l1:[55,70],l2:[55,77],l3:[55,84],l4:[55,89.5],rNorth:[70,57],rTop:[70,66],r1:[70,70],r2:[70,77],r214:[70,79],r3:[70,84],r4:[70,89.5],rightTop:[84,66],right:[84,70],seApproach:[84,81.5],ne:[89.6,32.1],east:[95.5,46.4],se:[81.4,81.5]},
-  links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['u8','u9'],['u9','ne'],['u9','east'],['u8','rNorth'],['rNorth','rTop'],['c2','l1'],['l1','l2'],['l2','l3'],['l3','l4'],['rTop','r1'],['r1','r2'],['r2','r214'],['r214','r3'],['r3','r4'],['rTop','rightTop'],['rightTop','right'],['right','seApproach'],['seApproach','se']],
+  '209':[[64,68,69.5,74],[69.5,70],'r1','중앙 비상구 2'],'210':[[57,81.5,63,87],[57,84],'l3','중앙 비상구 2'],
+  '211':[[64,75,69.5,81],[69.5,77],'r2','중앙 비상구 2'],'212':[[64,82,69.5,87.5],[69.5,84],'r3','동남쪽 비상구'],
+  '213':[[57,87.5,63,92],[57,89.5],'l4','중앙 비상구 2'],'214':[[72,75,80,84],[71.5,79],'r214','중앙 비상구 2']},
+  nodes:{nw:[12.7,40.7],west:[8.7,65.7],u0:[10,52],u1:[18,52],u2:[23,52],u3:[31,52],u4:[39,52],u5:[46,52],u6:[54,52],u7:[62,52],u8:[72,52],hallExit:[76.8,50.4],eastTurn:[83,50.4],eastNorth:[87,40],ne:[89.6,32.1],east:[95.5,46.4],c1:[36.8,65.7],c2:[52.1,65.9],lowerTop:[69.8,65.9],l1:[55,70],l2:[55,77],l3:[55,84],l4:[55,89.5],lowerLeft:[55,94],lowerCenter:[70,94],r1:[70,70],r2:[70,77],r214:[70,79],r3:[70,84],r4:[70,89.5],lowerEast:[84,91],se:[81.4,81.5]},
+  // The turquoise outlines around the lower rooms and escalator are walls.
+  // Black and turquoise strokes are both walls. Links therefore follow only the
+  // beige corridor centre-lines and meet at real openings/hinged doors. In
+  // particular, the left and right corridors around rooms 208-213 meet in the
+  // open passage above the room block; they do not connect to the upper 201-207
+  // corridor through the turquoise boundary.
+  links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['hallExit','eastTurn'],['eastTurn','eastNorth'],['eastNorth','ne'],['eastTurn','east'],['c2','l1'],['c2','lowerTop'],['lowerTop','r1'],['l1','l2'],['l2','l3'],['l3','l4'],['l4','lowerLeft'],['lowerLeft','lowerCenter'],['r1','r2'],['r2','r214'],['r214','r3'],['r3','r4'],['r4','lowerCenter'],['lowerCenter','lowerEast'],['lowerEast','se']],
   exitNodes:{'서북쪽 비상구':'nw','서쪽 비상구':'west','중앙 비상구 1':'c1','중앙 비상구 2':'c2','동북쪽 비상구':'ne','동쪽 비상구':'east','동측 복도 비상구':'hallExit','동남쪽 비상구':'se'}},
  '3f':{rooms:{
   '301':[[23,37,36,53],[25,36],'top1','서북쪽 비상구'],'302':[[37,37,50,53],[49.5,36],'top2','서북쪽 비상구'],
@@ -67,21 +73,21 @@ function currentLocation(){return floorData[floor].locations.find(x=>x[0]===loca
 function edgeClear(a,b,margin=2.8){return isRouteSegmentClear(a,b,hazards().map(h=>({x:h.item[2],y:h.item[3],radius:h.scale*4.3})),margin)}
 export function segmentDistance(x,y,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy||1))),px=a[0]+t*dx,py=a[1]+t*dy;return Math.hypot(x-px,y-py)}
 export function isRouteSegmentClear(a,b,hazards,margin=2.8){return hazards.every(h=>segmentDistance(h.x,h.y,a,b)>h.radius+margin)}
-function pathLength(path){return path.slice(1).reduce((n,p,i)=>n+Math.hypot(p[0]-path[i][0],p[1]-path[i][1]),0)}
+export function pathLength(path){return path.slice(1).reduce((n,p,i)=>n+Math.hypot(p[0]-path[i][0],p[1]-path[i][1]),0)}
 function planRoute(){
  const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2];
  // A route may leave a room only through its mapped hinged door. Every following
  // edge is a pre-validated corridor segment; no arbitrary node-to-node shortcut is
  // generated from the raster image.
- const nodes={...nav.nodes,start,door},links=[...nav.links,['start','door'],['door',entry]],strict=shortestRoutes(nodes,links,true);
+ const nodes={...nav.nodes,start,door},links=[...nav.links,['start','door'],['door',entry]],strict=shortestRoutes(nodes,links,{strict:true});
  let candidates=floorData[floor].exits.map(exit=>{const names=strict[nav.exitNodes[exit[0]]];return names&&{exit,path:names.map(name=>nodes[name]),blocked:false}}).filter(Boolean);
  if(!candidates.length){const nearest=[...floorData[floor].exits].sort((a,b)=>Math.hypot(a[1]-door[0],a[2]-door[1])-Math.hypot(b[1]-door[0],b[2]-door[1]))[0];return{exit:nearest,path:[start,door],blocked:true,noPath:true}}
  const route=candidates.sort((a,b)=>pathLength(a.path)-pathLength(b.path))[0];route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
 }
-function shortestRoutes(nodes,links,strict){
+export function shortestRoutes(nodes,links,{strict=true,isClear=edgeClear,start='start'}={}){
  const graph={};Object.keys(nodes).forEach(k=>graph[k]=[]);
- links.forEach(([a,b])=>{if(!nodes[a]||!nodes[b])return;const clear=edgeClear(nodes[a],nodes[b]),risk=clear?0:1000;if(strict&&!clear)return;const cost=Math.hypot(nodes[a][0]-nodes[b][0],nodes[a][1]-nodes[b][1])+risk;graph[a].push([b,cost]);graph[b].push([a,cost])});
- const dist={start:0},paths={start:['start']},queue=['start'];
+ links.forEach(([a,b])=>{if(!nodes[a]||!nodes[b])return;const clear=isClear(nodes[a],nodes[b]),risk=clear?0:1000;if(strict&&!clear)return;const cost=Math.hypot(nodes[a][0]-nodes[b][0],nodes[a][1]-nodes[b][1])+risk;graph[a].push([b,cost]);graph[b].push([a,cost])});
+ const dist={[start]:0},paths={[start]:[start]},queue=[start];
  while(queue.length){queue.sort((a,b)=>dist[a]-dist[b]);const at=queue.shift();graph[at].forEach(([next,cost])=>{const value=dist[at]+cost;if(value<(dist[next]??Infinity)){dist[next]=value;paths[next]=[...paths[at],next];if(!queue.includes(next))queue.push(next)}})}
  return paths;
 }
@@ -149,7 +155,7 @@ function updateDirection(rotation){const normalized=((rotation+540)%360)-180;$('
 async function startAr(){
  const route=planRoute(),item=currentLocation();arDestinationName=route.exit[0];arSteps=buildArSteps(route);arCompleted=false;currentHeading=null;lastWrongWayAt=0;$('#arLocation').textContent=`${floorData[floor].name} ${item[1]}`;show(5);activateArStep(0,false);updateDirection(targetBearing);
  if(!navigator.mediaDevices?.getUserMedia){$('#arMessage').textContent='이 브라우저에서는 카메라를 사용할 수 없습니다.';return}
- try{const result=await connectBestCamera();$('#arCamera').srcObject=cameraStream;$('#torchButton').disabled=!result.torch;$('#arMessage').textContent=result.torch?`손전등 지원 카메라 연결됨 · ${result.label}`:`후면 카메라 연결됨 · 손전등 미지원`;speakGuide(`${route.exit[0]}까지 안내를 시작합니다. ${arSteps[0].text}`,true);await enableSensors(false);startObstacleDetection()}catch(error){$('#arMessage').textContent=error.name==='NotAllowedError'?'카메라 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.':'후면 카메라를 시작할 수 없습니다.'}
+ try{const result=await connectBestCamera(),video=$('#arCamera');video.srcObject=cameraStream;await video.play();$('#torchButton').disabled=!result.torch;$('#arMessage').textContent=result.torch?`손전등 지원 카메라 연결됨 · ${result.label}`:`후면 카메라 연결됨 · 손전등 미지원`;speakGuide(`${route.exit[0]}까지 안내를 시작합니다. ${arSteps[0].text}`,true);startObstacleDetection();enableSensors(false)}catch(error){$('#arMessage').textContent=error.name==='NotAllowedError'?'카메라 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.':'후면 카메라를 시작할 수 없습니다.'}
 }
 async function openCamera(video){return navigator.mediaDevices.getUserMedia({video:{...video,width:{ideal:1280},height:{ideal:720}},audio:false})}
 async function connectBestCamera(){
@@ -161,12 +167,20 @@ async function connectBestCamera(){
  cameraStream=await openCamera({facingMode:{ideal:'environment'}});const track=cameraStream.getVideoTracks()[0];return{torch:!!(track.getCapabilities?.()||{}).torch,label:track.label||'후면 카메라'}
 }
 function cameraPriority(label=''){return/(back|rear|environment|후면|뒷면)/i.test(label)?2:/(front|user|전면)/i.test(label)?0:1}
-function loadVisionScript(src,ready){return new Promise((resolve,reject)=>{if(ready())return resolve();const existing=document.querySelector(`script[src="${src}"]`);if(existing){existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return}const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=reject;document.head.append(script)})}
+function loadVisionScript(sources,ready){
+ const urls=Array.isArray(sources)?sources:[sources];
+ if(ready())return Promise.resolve();
+ return urls.reduce((attempt,url)=>attempt.catch(()=>new Promise((resolve,reject)=>{
+  document.querySelectorAll('script[data-vision-src]').forEach(script=>{if(script.dataset.visionSrc===url)script.remove()});
+  const script=document.createElement('script'),timer=setTimeout(()=>{script.remove();reject(new Error(`모델 스크립트 시간 초과: ${url}`))},15000);
+  script.src=url;script.async=true;script.dataset.visionSrc=url;script.onload=()=>{clearTimeout(timer);ready()?resolve():reject(new Error(`모델을 사용할 수 없음: ${url}`))};script.onerror=()=>{clearTimeout(timer);script.remove();reject(new Error(`모델 스크립트 실패: ${url}`))};document.head.append(script);
+ })),Promise.reject()).then(()=>undefined);
+}
 async function loadObstacleModel(){
  if(obstacleModel)return obstacleModel;
  $('#obstacleStatus').textContent='장애물 인식 모델 불러오는 중';
- await loadVisionScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js',()=>!!window.tf);
- await loadVisionScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',()=>!!window.cocoSsd);
+ await loadVisionScript(['https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js','https://unpkg.com/@tensorflow/tfjs@4.22.0/dist/tf.min.js'],()=>!!window.tf);
+ await loadVisionScript(['https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js','https://unpkg.com/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js'],()=>!!window.cocoSsd);
  obstacleModel=await window.cocoSsd.load({base:'lite_mobilenet_v2'});return obstacleModel;
 }
 function drawObstacleBoxes(predictions,blocking){
@@ -183,7 +197,7 @@ function setObstacleState(blocking){
  if(!obstacleBlocked){status.textContent='장애물 인식 중';return}const labels=[...new Set(blocking.map(item=>item.class))].join(', ');status.textContent=`전방 장애물 감지 · ${labels}`;$('#arMessage').textContent='멈추세요. 전방 장애물을 피해 안전을 확인하세요.';const now=Date.now();if(now-lastObstacleWarningAt>5000){lastObstacleWarningAt=now;speakGuide('멈추세요. 전방에 장애물이 감지되었습니다.',true)}
 }
 async function startObstacleDetection(){
- stopObstacleDetection();try{await loadObstacleModel();if(!cameraStream)return;$('#obstacleStatus').textContent='장애물 인식 중';obstacleTimer=setInterval(detectObstacles,850);detectObstacles()}catch{$('#obstacleStatus').textContent='장애물 인식을 시작할 수 없습니다.'}
+ stopObstacleDetection();try{await loadObstacleModel();if(!cameraStream)return;$('#obstacleStatus').textContent='장애물 인식 중';obstacleTimer=setInterval(detectObstacles,850);detectObstacles()}catch(error){console.error('Obstacle detection failed',error);$('#obstacleStatus').textContent='장애물 인식 재시도 필요';$('#arMessage').textContent=`장애물 모델을 불러오지 못했습니다. 네트워크를 확인하고 AR을 다시 시작하세요. (${error.message})`}
 }
 function stopObstacleDetection(){if(obstacleTimer){clearInterval(obstacleTimer);obstacleTimer=null}obstacleBlocked=false;obstacleBusy=false;const canvas=$('#obstacleCanvas'),ctx=canvas?.getContext('2d');if(ctx)ctx.clearRect(0,0,canvas.width,canvas.height);$('#obstacleStatus')?.classList.remove('detected');$('.ar-screen')?.classList.remove('obstacle-blocked')}
 function stopAr(){stopObstacleDetection();if(cameraStream){cameraStream.getTracks().forEach(track=>track.stop());cameraStream=null}torchOn=false;stopSignal();window.speechSynthesis?.cancel();$('#torchButton')?.classList.remove('active');if($('#torchButton'))$('#torchButton').disabled=true}
