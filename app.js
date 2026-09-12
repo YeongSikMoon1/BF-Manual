@@ -15,8 +15,8 @@ export const navigation={
   links:[['west','wWest'],['wWest','w'],['w','c1'],['c1','c1South'],['c1South','c2'],['c2','south'],['c2','c3'],['c3','e'],['e','eNorth'],['eNorth','ne'],['e','east']],
   exitNodes:{'서쪽 비상구':'west','서측 중앙 비상구':'c1','중앙 비상구':'c2','남측 중앙 비상구':'south','동북쪽 비상구':'ne','동쪽 비상구':'east'}},
  '1f':{rooms:{
-  hall1:[[17,25,39,48],[20,50],'c1','서쪽 비상구',[[[32,50],'c2'],[[38,50],'c2'],[[28,25],'back1']]],hall2:[[40,27,61,51],[42,53],'c2','남서쪽 비상구',[[[51,53],'c3'],[[59,54],'c3'],[[50,27],'back2']]],
-  hall3:[[62,31,82,53],[63,55],'c3','동북쪽 비상구',[[[72,55],'c4'],[[80,56],'c5'],[[72,31],'back3']]],multi:[[13,64,36,86],[19,62],'c1','서쪽 비상구',[[[31,62],'c2'],[[35,68],'audNorth']],'open-zone'],auditorium:[[36,68,49,88],[39,66],'audNorth','남서쪽 비상구',[[[47,88],'audSouth']],'open-zone']},
+  hall1:[[17,25,39,48],[23,49.5],'c1','서쪽 비상구',[[[28,25],'back1']]],hall2:[[40,27,61,51],[47,52.5],'c3','남서쪽 비상구',[[[50,27],'back2']]],
+  hall3:[[62,31,82,53],[72,54.5],'c4','동북쪽 비상구',[[[72,31],'back3']]],multi:[[13,64,36,86],[19,62],'c1','서쪽 비상구',[[[31,62],'c2'],[[35,68],'audNorth']],'open-zone'],auditorium:[[36,68,49,88],[39,66],'audNorth','남서쪽 비상구',[[[47,88],'audSouth']],'open-zone']},
   nodes:{west:[8.1,49.2],c1:[18,57],c2:[36,57],c3:[55,58],c4:[73,59],c5:[86,59],backWest:[13,20],back1:[28,21],back2:[50,24],back3:[72,28],backEast:[85,32],eastNorth:[89,49],ne:[91.7,41.1],east:[92.6,67.9],se:[90.7,77.9],audNorth:[43,62],audSouth:[47,89],southWestTop:[49,62],southWestMid:[49,86],south1:[50.6,93.3],southEastTop:[74,64],southEastMid:[74,87],south2:[74,92.6]},
   // All selectable hall doors feed verified corridor centre-lines. The two
   // south exits are reachable through the vertical passages between the lower

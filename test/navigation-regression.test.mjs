@@ -48,14 +48,19 @@ test('2f room 214 reaches the southeast exit around both sides of its perimeter'
 test('1f exhibition halls can use the rear corridor without crossing walls',()=>{
  const graph=navigation['1f'],rearNodes=['backWest','back1','back2','back3','backEast'];
  for(const node of rearNodes)assert.ok(graph.nodes[node],`missing rear corridor node ${node}`);
- for(const roomId of ['hall1','hall2','hall3'])assert.ok(graph.rooms[roomId][4].some(([,entry])=>entry.startsWith('back')),`${roomId}: missing rear door`);
+ const markedDoors={hall1:[[23,49.5],[28,25]],hall2:[[47,52.5],[50,27]],hall3:[[72,54.5],[72,31]]};
+ for(const [roomId,doors] of Object.entries(markedDoors)){
+  const room=graph.rooms[roomId],mapped=[[room[1],room[2]],...(room[4]||[])];
+  assert.deepEqual(mapped.map(([door])=>door),doors,`${roomId}: contains a non-door wall crossing`);
+  assert.ok(mapped.some(([,entry])=>entry.startsWith('back')),`${roomId}: missing rear door`);
+ }
  assert.ok(reachable(graph,'back2').has('west')&&reachable(graph,'back2').has('ne'));
 });
 
 test('all surveyed hinged doors are mapped on every floor',()=>{
  const expected={
   b1:{'west-elevator':2,'control-room':2,'east-elevator':2,'west-parking':2,'central-parking':4,'south-parking':3,'east-ramp':3},
-  '1f':{hall1:4,hall2:4,hall3:4,multi:3,auditorium:2},
+  '1f':{hall1:2,hall2:2,hall3:2,multi:3,auditorium:2},
   '2f':{'201':2,'202':2,'203':2,'204':2,'205':2,'206':2,'207':2,'208':1,'209':1,'210':1,'211':1,'212':1,'213':1,'214':1},
   '3f':{'301':1,'302':1,'303':1,'304':2,'305':1,'306':2,'307':4}
  };
