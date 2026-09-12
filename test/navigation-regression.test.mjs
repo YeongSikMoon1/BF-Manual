@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,floorData,isRouteSegmentClear,navigation,pathLength,pointAlongPath,routeProgress,shortestRoutes} from '../app.js';
+import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,floorData,isRouteSegmentClear,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
 
 function reachable(graph,start){
  const seen=new Set([start]),queue=[start];
@@ -117,4 +117,5 @@ test('map character moves along the drawn route',()=>{
  assert.deepEqual(pointAlongPath(path,0),[10,10]);
  assert.deepEqual(pointAlongPath(path,50),[20,15]);
  assert.deepEqual(pointAlongPath(path,100),[20,30]);
+ assert.deepEqual(segmentAtProgress(path,75),[[20,10],[20,30]]);
 });
