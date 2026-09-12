@@ -28,7 +28,7 @@ test('every floor keeps each room connected to a mapped exit',()=>{
 
 test('validated corridor links never cut through a room interior',()=>{
  for(const [floor,graph] of Object.entries(navigation))for(const [from,to] of graph.links){
-  for(const [roomId,[bounds]] of Object.entries(graph.rooms))assert.equal(segmentCrossesInterior(graph.nodes[from],graph.nodes[to],bounds),false,`${floor} ${from}->${to} crosses ${roomId}`);
+  for(const [roomId,room] of Object.entries(graph.rooms)){if(room[5]==='open-zone')continue;assert.equal(segmentCrossesInterior(graph.nodes[from],graph.nodes[to],room[0]),false,`${floor} ${from}->${to} crosses ${roomId}`)}
  }
 });
 

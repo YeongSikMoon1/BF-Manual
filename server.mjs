@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { invokeEvacuationAgent } from './evacuation-agent.mjs';
+import { getTrackingSession,saveTrackingSession } from './tracking-store.mjs';
 
 const root=dirname(fileURLToPath(import.meta.url));
 const app=express();
@@ -23,6 +24,8 @@ app.post('/api/evacuation-guide',async(req,res)=>{
   return res.json(await invokeEvacuationAgent(req.body));
  }catch(error){return res.status(500).json({error:error.message})}
 });
+app.get('/api/evacuation-session',(req,res)=>{const session=getTrackingSession(String(req.query.id||''));return session?res.json(session):res.status(404).json({error:'대피 현황을 찾을 수 없습니다.'})});
+app.post('/api/evacuation-session',(req,res)=>{if(!req.body?.id)return res.status(400).json({error:'추적 번호가 필요합니다.'});return res.json(saveTrackingSession(String(req.body.id),req.body))});
 app.use(express.static(root,{index:'index.html'}));
 app.get('*path',(_req,res)=>res.sendFile(join(root,'index.html')));
 
