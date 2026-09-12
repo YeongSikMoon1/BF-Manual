@@ -9,42 +9,42 @@ export const floorData={
 // Each selectable place has an interior rectangle, its doorway and a corridor node.
 export const navigation={
  b1:{rooms:{
-  'west-elevator':[[20,57,23.5,63],[24,63],'w','서쪽 비상구'],'control-room':[[42,56,50,62],[48,63],'c2','중앙 비상구'],
-  'east-elevator':[[85,41,90,49],[85,50],'e','동쪽 비상구']},
+  'west-elevator':[[20,57,23.5,63],[24,63],'w','서측 중앙 비상구',[[[21.5,56.5],'w']]],'control-room':[[42,56,50,62],[48,63],'c2','중앙 비상구',[[[42,59],'c1South']]],
+  'east-elevator':[[85,41,90,49],[85,50],'e','동쪽 비상구',[[[88,49.5],'e']]]},
   nodes:{west:[7.3,39],wWest:[18,65],w:[25,65],c1:[28.3,60.1],c1South:[30,65],c2:[53.4,63.1],south:[46.8,78],c3:[70,65],e:[84,58],eNorth:[83,38],ne:[87.5,28.6],east:[93.4,51.6]},
   links:[['west','wWest'],['wWest','w'],['w','c1'],['c1','c1South'],['c1South','c2'],['c2','south'],['c2','c3'],['c3','e'],['e','eNorth'],['eNorth','ne'],['e','east']],
   exitNodes:{'서쪽 비상구':'west','서측 중앙 비상구':'c1','중앙 비상구':'c2','남측 중앙 비상구':'south','동북쪽 비상구':'ne','동쪽 비상구':'east'}},
  '1f':{rooms:{
-  hall1:[[17,25,39,48],[32,52],'c2','서쪽 비상구'],hall2:[[40,27,61,51],[51,53],'c3','동쪽 비상구'],
-  hall3:[[62,31,82,53],[72,55],'c4','동북쪽 비상구'],multi:[[13,64,43,83],[38,62],'c2','서쪽 비상구']},
-  nodes:{west:[8.1,49.2],c1:[18,57],c2:[36,57],c3:[55,58],c4:[73,59],c5:[86,59],eastNorth:[89,49],ne:[91.7,41.1],east:[92.6,67.9],se:[90.7,77.9],south1:[50.6,93.3],south2:[74,92.6]},
-  // The east exits are reached through the east-side corridor. The south exits are
-  // intentionally not linked: the drawing does not show a verified public corridor
-  // from the selectable rooms to those doors.
-  links:[['west','c1'],['c1','c2'],['c2','c3'],['c3','c4'],['c4','c5'],['c5','eastNorth'],['eastNorth','ne'],['c5','east'],['east','se']],
+  hall1:[[17,25,39,48],[20,50],'c1','서쪽 비상구',[[[32,50],'c2'],[[38,50],'c2']]],hall2:[[40,27,61,51],[42,53],'c2','남서쪽 비상구',[[[51,53],'c3'],[[59,54],'c3']]],
+  hall3:[[62,31,82,53],[63,55],'c3','동북쪽 비상구',[[[72,55],'c4'],[[80,56],'c5']]],multi:[[13,64,43,83],[19,62],'c1','서쪽 비상구',[[[31,62],'c2'],[[40,62],'c2']]]},
+  nodes:{west:[8.1,49.2],c1:[18,57],c2:[36,57],c3:[55,58],c4:[73,59],c5:[86,59],eastNorth:[89,49],ne:[91.7,41.1],east:[92.6,67.9],se:[90.7,77.9],southWestTop:[49,62],southWestMid:[49,86],south1:[50.6,93.3],southEastTop:[74,64],southEastMid:[74,87],south2:[74,92.6]},
+  // All selectable hall doors feed verified corridor centre-lines. The two
+  // south exits are reachable through the vertical passages between the lower
+  // halls, never through the coloured room blocks.
+  links:[['west','c1'],['c1','c2'],['c2','c3'],['c3','c4'],['c4','c5'],['c5','eastNorth'],['eastNorth','ne'],['c5','east'],['east','se'],['c2','southWestTop'],['southWestTop','southWestMid'],['southWestMid','south1'],['c4','southEastTop'],['southEastTop','southEastMid'],['southEastMid','south2']],
   exitNodes:{'서쪽 비상구':'west','남서쪽 비상구':'south1','남쪽 비상구':'south2','동북쪽 비상구':'ne','동쪽 비상구':'east','동남쪽 비상구':'se'}},
  '2f':{rooms:{
-  '201':[[13,55.5,18.5,63],[18,54],'u1','서쪽 비상구'],'202':[[19.5,55.5,26,63],[23,54],'u2','서쪽 비상구'],
-  '203':[[27,55.5,33.5,63],[31,54],'u3','서북쪽 비상구'],'204':[[34.5,55.5,41,63],[39,54],'u4','동측 복도 비상구'],
-  '205':[[42,55.5,48.5,63],[46,54],'u5','동측 복도 비상구'],'206':[[49,55.5,56,63],[54,54],'u6','동측 복도 비상구'],
-  '207':[[57,55.5,64,63],[62,54],'u7','동측 복도 비상구'],'208':[[57,68,63,74],[57,70],'l1','중앙 비상구 2'],
+  '201':[[13,55.5,18.5,63],[18,54],'u1','서쪽 비상구',[[[16,64.2],'d201']]],'202':[[19.5,55.5,26,63],[23,54],'u2','중앙 비상구 1',[[[23,64.2],'d202']]],
+  '203':[[27,55.5,33.5,63],[31,54],'u3','중앙 비상구 1',[[[30.5,64.2],'d203']]],'204':[[34.5,55.5,41,63],[39,54],'u4','중앙 비상구 1',[[[38,64.2],'d204']]],
+  '205':[[42,55.5,48.5,63],[46,54],'u5','중앙 비상구 2',[[[45.5,64.2],'d205']]],'206':[[49,55.5,56,63],[54,54],'u6','중앙 비상구 2',[[[53.5,64.2],'d206']]],
+  '207':[[57,55.5,64,63],[62,54],'u7','중앙 비상구 2',[[[61.5,64.2],'d207']]],'208':[[57,68,63,74],[57,70],'l1','중앙 비상구 2'],
   '209':[[64,68,69.5,74],[69.5,70],'r1','중앙 비상구 2'],'210':[[57,81.5,63,87],[57,84],'l3','중앙 비상구 2'],
   '211':[[64,75,69.5,81],[69.5,77],'r2','중앙 비상구 2'],'212':[[64,82,69.5,87.5],[69.5,84],'r3','동남쪽 비상구'],
-  '213':[[57,87.5,63,92],[57,89.5],'l4','중앙 비상구 2'],'214':[[72,75,80,84],[71.5,79],'r214','중앙 비상구 2']},
-  nodes:{nw:[12.7,40.7],west:[8.7,65.7],u0:[10,52],u1:[18,52],u2:[23,52],u3:[31,52],u4:[39,52],u5:[46,52],u6:[54,52],u7:[62,52],u8:[72,52],hallExit:[76.8,50.4],eastTurn:[83,50.4],eastNorth:[87,40],ne:[89.6,32.1],east:[95.5,46.4],c1:[36.8,65.7],c2:[52.1,65.9],lowerTop:[69.8,65.9],l1:[55,70],l2:[55,77],l3:[55,84],l4:[55,89.5],lowerLeft:[55,94],lowerCenter:[70,94],r1:[70,70],r2:[70,77],r214:[70,79],r3:[70,84],r4:[70,89.5],lowerEast:[84,91],se:[81.4,81.5]},
+  '213':[[57,87.5,63,92],[57,89.5],'l4','중앙 비상구 2'],'214':[[72,75,80,84],[71.5,79],'r214','동남쪽 비상구',[[[80.2,81.5],'se']]]},
+  nodes:{nw:[12.7,40.7],west:[8.7,65.7],u0:[10,52],u1:[18,52],u2:[23,52],u3:[31,52],u4:[39,52],u5:[46,52],u6:[54,52],u7:[62,52],u8:[72,52],hallExit:[76.8,50.4],eastTurn:[83,50.4],eastNorth:[87,40],ne:[89.6,32.1],east:[95.5,46.4],d201:[16,65.8],d202:[23,65.8],d203:[30.5,65.8],c1:[36.8,65.7],d204:[38,65.8],d205:[45.5,65.8],c2:[52.1,65.9],d206:[53.5,65.9],d207:[61.5,65.9],lowerTop:[69.8,65.9],l1:[55,70],l2:[55,77],l3:[55,84],l4:[55,89.5],lowerLeft:[55,94],lowerCenter:[70,94],r1:[70,70],r2:[70,77],r214:[70,79],r3:[70,84],r4:[70,89.5],lowerEast:[84,91],se:[81.4,81.5]},
   // The turquoise outlines around the lower rooms and escalator are walls.
   // Black and turquoise strokes are both walls. Links therefore follow only the
   // beige corridor centre-lines and meet at real openings/hinged doors. In
   // particular, the left and right corridors around rooms 208-213 meet in the
   // open passage above the room block; they do not connect to the upper 201-207
   // corridor through the turquoise boundary.
-  links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['hallExit','eastTurn'],['eastTurn','eastNorth'],['eastNorth','ne'],['eastTurn','east'],['c2','l1'],['c2','lowerTop'],['lowerTop','r1'],['l1','l2'],['l2','l3'],['l3','l4'],['l4','lowerLeft'],['lowerLeft','lowerCenter'],['r1','r2'],['r2','r214'],['r214','r3'],['r3','r4'],['r4','lowerCenter'],['lowerCenter','lowerEast'],['lowerEast','se']],
+  links:[['nw','u0'],['west','u0'],['u0','u1'],['u1','u2'],['u2','u3'],['u3','u4'],['u4','u5'],['u5','u6'],['u6','u7'],['u7','u8'],['u8','hallExit'],['hallExit','eastTurn'],['eastTurn','eastNorth'],['eastNorth','ne'],['eastTurn','east'],['west','d201'],['d201','d202'],['d202','d203'],['d203','c1'],['c1','d204'],['d204','d205'],['d205','c2'],['c2','d206'],['d206','d207'],['d207','lowerTop'],['c2','l1'],['c2','lowerTop'],['lowerTop','r1'],['l1','l2'],['l2','l3'],['l3','l4'],['l4','lowerLeft'],['lowerLeft','lowerCenter'],['r1','r2'],['r2','r214'],['r214','r3'],['r3','r4'],['r4','lowerCenter'],['lowerCenter','lowerEast'],['lowerEast','se']],
   exitNodes:{'서북쪽 비상구':'nw','서쪽 비상구':'west','중앙 비상구 1':'c1','중앙 비상구 2':'c2','동북쪽 비상구':'ne','동쪽 비상구':'east','동측 복도 비상구':'hallExit','동남쪽 비상구':'se'}},
  '3f':{rooms:{
-  '301':[[23,37,36,53],[25,36],'top1','서북쪽 비상구'],'302':[[37,37,50,53],[49.5,36],'top2','서북쪽 비상구'],
-  '304':[[51,37,64,53],[63.5,52],'midR','동쪽 비상구'],'303':[[23,61,36,75],[24,75.5],'lower1','서북쪽 비상구'],
-  '305':[[37,61,50,75],[38,75.5],'lower2','서북쪽 비상구'],'306':[[51,61,64,75],[63.5,61],'midR','동쪽 비상구'],
-  '307':[[74,48,86,68],[86,57],'eastCorr','동쪽 비상구']},
+  '301':[[23,37,36,53],[25,36],'top1','서북쪽 비상구'],'302':[[37,37,50,53],[38,36],'top2','서북쪽 비상구'],
+  '304':[[51,37,64,53],[52,36],'top3','동쪽 비상구',[[[63.5,52],'midR']]],'303':[[23,61,36,75],[24,75.5],'lower1','서북쪽 비상구'],
+  '305':[[37,61,50,75],[38,75.5],'lower2','서북쪽 비상구'],'306':[[51,61,64,75],[52,75.5],'lower3','동쪽 비상구',[[[63.5,61],'midR']]],
+  '307':[[74,48,86,68],[74,47],'eastTopL','동쪽 비상구',[[[84,47],'eastTopR'],[[86,57],'eastCorr'],[[74,68],'lowerRight']]]},
   nodes:{nw:[20.5,25.9],topL:[20,32],top1:[25,32],top2:[49.5,32],top3:[61,32],upperRight:[66,32],midR:[66,57],eastTopL:[70,44],eastTopR:[88,44],eastCorr:[88,57],east:[90.6,54.1],lowerL:[20,78],lower1:[24,78],lower2:[38,78],lower3:[60,78],lowerRight:[66,78]},
   // upperRight/lowerRight keep the route inside the right-hand corridor. The old
   // lower3 -> midR diagonal crossed the wall and the interior of room 306.
@@ -74,21 +74,29 @@ function edgeClear(a,b,margin=2.8){return isRouteSegmentClear(a,b,hazards().map(
 export function segmentDistance(x,y,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy||1))),px=a[0]+t*dx,py=a[1]+t*dy;return Math.hypot(x-px,y-py)}
 export function isRouteSegmentClear(a,b,hazards,margin=2.8){return hazards.every(h=>segmentDistance(h.x,h.y,a,b)>h.radius+margin)}
 export function pathLength(path){return path.slice(1).reduce((n,p,i)=>n+Math.hypot(p[0]-path[i][0],p[1]-path[i][1]),0)}
+export function routeRisk(path,hazards,safeClearance=14){
+ return path.slice(1).reduce((risk,point,index)=>risk+hazards.reduce((sum,hazard)=>{const clearance=segmentDistance(hazard.x,hazard.y,path[index],point)-hazard.radius;return sum+Math.max(0,safeClearance-clearance)**2},0),0);
+}
+export function chooseSafestRoute(candidates,hazards){
+ return [...candidates].sort((a,b)=>routeRisk(a.path,hazards)-routeRisk(b.path,hazards)||pathLength(a.path)-pathLength(b.path))[0];
+}
 function planRoute(){
- const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),door=room[1],entry=room[2];
- // A route may leave a room only through its mapped hinged door. Every following
+ const nav=navigation[floor],selected=currentLocation(),room=nav.rooms[selected[0]],start=randomPointFor(floor,selected[0]),portals=[[room[1],room[2]],...(room[4]||[])];
+ // A route may leave a room through any mapped hinged door. Every following
  // edge is a pre-validated corridor segment; no arbitrary node-to-node shortcut is
  // generated from the raster image.
- const nodes={...nav.nodes,start,door},links=[...nav.links,['start','door'],['door',entry]],strict=shortestRoutes(nodes,links,{strict:true});
- let candidates=floorData[floor].exits.map(exit=>{const names=strict[nav.exitNodes[exit[0]]];return names&&{exit,path:names.map(name=>nodes[name]),blocked:false}}).filter(Boolean);
- if(!candidates.length){const nearest=[...floorData[floor].exits].sort((a,b)=>Math.hypot(a[1]-door[0],a[2]-door[1])-Math.hypot(b[1]-door[0],b[2]-door[1]))[0];return{exit:nearest,path:[start,door],blocked:true,noPath:true}}
- const route=candidates.sort((a,b)=>pathLength(a.path)-pathLength(b.path))[0];route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
+ const nodes={...nav.nodes,start},links=[...nav.links];portals.forEach(([door,entry],index)=>{const name=`door${index}`;nodes[name]=door;links.push(['start',name],[name,entry])});
+ const hazardPoints=hazards().map(h=>({x:h.item[2],y:h.item[3],radius:h.scale*4.3}));
+ const strict=shortestRoutes(nodes,links,{strict:true,terminalNodes:new Set(Object.values(nav.exitNodes)),edgeCost:(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1])+routeRisk([a,b],hazardPoints)*8});
+ const candidates=floorData[floor].exits.map(exit=>{const names=strict[nav.exitNodes[exit[0]]];return names&&{exit,path:names.map(name=>nodes[name]),blocked:false}}).filter(Boolean);
+ if(!candidates.length){const nearest=[...floorData[floor].exits].sort((a,b)=>Math.min(...portals.map(([door])=>Math.hypot(a[1]-door[0],a[2]-door[1])))-Math.min(...portals.map(([door])=>Math.hypot(b[1]-door[0],b[2]-door[1]))))[0];return{exit:nearest,path:[start,portals[0][0]],blocked:true,noPath:true}}
+ const route=chooseSafestRoute(candidates,hazardPoints);route.path=route.path.filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);return route;
 }
-export function shortestRoutes(nodes,links,{strict=true,isClear=edgeClear,start='start'}={}){
+export function shortestRoutes(nodes,links,{strict=true,isClear=edgeClear,start='start',terminalNodes=new Set(),edgeCost=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1])}={}){
  const graph={};Object.keys(nodes).forEach(k=>graph[k]=[]);
- links.forEach(([a,b])=>{if(!nodes[a]||!nodes[b])return;const clear=isClear(nodes[a],nodes[b]),risk=clear?0:1000;if(strict&&!clear)return;const cost=Math.hypot(nodes[a][0]-nodes[b][0],nodes[a][1]-nodes[b][1])+risk;graph[a].push([b,cost]);graph[b].push([a,cost])});
+ links.forEach(([a,b])=>{if(!nodes[a]||!nodes[b])return;const clear=isClear(nodes[a],nodes[b]),risk=clear?0:1000;if(strict&&!clear)return;const cost=edgeCost(nodes[a],nodes[b])+risk;graph[a].push([b,cost]);graph[b].push([a,cost])});
  const dist={[start]:0},paths={[start]:[start]},queue=[start];
- while(queue.length){queue.sort((a,b)=>dist[a]-dist[b]);const at=queue.shift();graph[at].forEach(([next,cost])=>{const value=dist[at]+cost;if(value<(dist[next]??Infinity)){dist[next]=value;paths[next]=[...paths[at],next];if(!queue.includes(next))queue.push(next)}})}
+ while(queue.length){queue.sort((a,b)=>dist[a]-dist[b]);const at=queue.shift();if(at!==start&&terminalNodes.has(at))continue;graph[at].forEach(([next,cost])=>{const value=dist[at]+cost;if(value<(dist[next]??Infinity)){dist[next]=value;paths[next]=[...paths[at],next];if(!queue.includes(next))queue.push(next)}})}
  return paths;
 }
 function safestExit(){return planRoute().exit}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceArDistance,floorData,isRouteSegmentClear,navigation,pathLength,shortestRoutes} from '../app.js';
+import {advanceArDistance,chooseSafestRoute,floorData,isRouteSegmentClear,navigation,pathLength,shortestRoutes} from '../app.js';
 
 function reachable(graph,start){
  const seen=new Set([start]),queue=[start];
@@ -31,25 +31,42 @@ test('validated corridor links never cut through a room interior',()=>{
  }
 });
 
-test('2f lower rooms cannot route through turquoise walls to upper exits',()=>{
- const graph=navigation['2f'],upperExits=new Set(['nw','west','c1','hallExit','ne','east']);
- for(const roomId of ['208','209','210','211','212','213','214']){
-  const entry=graph.rooms[roomId][2],connected=reachable(graph,entry);
-  assert.equal([...upperExits].some(exit=>connected.has(exit)),false,`2f/${roomId}: crosses a turquoise wall to an upper exit`);
-  assert.equal(connected.has('c2'),true,`2f/${roomId}: missing corridor to the exit left of room 208`);
-  assert.equal(connected.has('se'),true,`2f/${roomId}: missing lower corridor to south-east exit`);
+test('2f maps every visible room door and the direct exit beside room 214',()=>{
+ const graph=navigation['2f'];
+ for(const roomId of ['201','202','203','204','205','206','207'])assert.equal(graph.rooms[roomId][4].length,1,`2f/${roomId}: missing lower door`);
+ assert.deepEqual(graph.rooms['214'][4],[[[80.2,81.5],'se']]);
+});
+
+test('all surveyed hinged doors are mapped on every floor',()=>{
+ const expected={
+  b1:{'west-elevator':2,'control-room':2,'east-elevator':2},
+  '1f':{hall1:3,hall2:3,hall3:3,multi:3},
+  '2f':{'201':2,'202':2,'203':2,'204':2,'205':2,'206':2,'207':2,'208':1,'209':1,'210':1,'211':1,'212':1,'213':1,'214':2},
+  '3f':{'301':1,'302':1,'303':1,'304':2,'305':1,'306':2,'307':4}
+ };
+ for(const [floor,rooms] of Object.entries(expected))for(const [roomId,count] of Object.entries(rooms)){
+  const room=navigation[floor].rooms[roomId],portals=[[room[1],room[2]],...(room[4]||[])];
+  assert.equal(portals.length,count,`${floor}/${roomId}: surveyed door count changed`);
+  for(const [door,entry] of portals){assert.equal(door.length,2,`${floor}/${roomId}: invalid door coordinate`);assert.ok(navigation[floor].nodes[entry],`${floor}/${roomId}: missing corridor for door`)}
  }
 });
 
 function nearestExitWithoutHazards(floor,roomId){
- const graph=navigation[floor],room=graph.rooms[roomId],nodes={...graph.nodes,door:room[1]},links=[...graph.links,['door',room[2]]];
- const routes=shortestRoutes(nodes,links,{start:'door',isClear:()=>true});
+ const graph=navigation[floor],room=graph.rooms[roomId],nodes={...graph.nodes,start:[(room[0][0]+room[0][2])/2,(room[0][1]+room[0][3])/2]},links=[...graph.links];
+ [[room[1],room[2]],...(room[4]||[])].forEach(([door,entry],index)=>{nodes[`door${index}`]=door;links.push(['start',`door${index}`],[`door${index}`,entry])});
+ const routes=shortestRoutes(nodes,links,{isClear:()=>true,terminalNodes:new Set(Object.values(graph.exitNodes))});
  return floorData[floor].exits.map(exit=>({name:exit[0],path:routes[graph.exitNodes[exit[0]]]})).filter(item=>item.path).sort((a,b)=>pathLength(a.path.map(name=>nodes[name]))-pathLength(b.path.map(name=>nodes[name])))[0]?.name;
 }
 
 test('2f rooms choose the nearest reachable exit by corridor distance',()=>{
- const expected={201:'서북쪽 비상구',202:'서북쪽 비상구',203:'서북쪽 비상구',204:'동측 복도 비상구',205:'동측 복도 비상구',206:'동측 복도 비상구',207:'동측 복도 비상구',208:'중앙 비상구 2',209:'중앙 비상구 2',210:'중앙 비상구 2',211:'중앙 비상구 2',212:'동남쪽 비상구',213:'중앙 비상구 2',214:'중앙 비상구 2'};
+ const expected={201:'서쪽 비상구',202:'중앙 비상구 1',203:'중앙 비상구 1',204:'중앙 비상구 1',205:'중앙 비상구 2',206:'중앙 비상구 2',207:'중앙 비상구 2',208:'중앙 비상구 2',209:'중앙 비상구 2',210:'중앙 비상구 2',211:'중앙 비상구 2',212:'동남쪽 비상구',213:'중앙 비상구 2',214:'동남쪽 비상구'};
  for(const [roomId,exit] of Object.entries(expected))assert.equal(nearestExitWithoutHazards('2f',roomId),exit,`2f/${roomId}: should use ${exit}`);
+});
+
+test('route selection prioritizes hazard clearance before distance',()=>{
+ const short={exit:['가까운 출구'],path:[[0,0],[5,0],[10,0]]},safe={exit:['안전한 출구'],path:[[0,0],[0,10],[10,10]]};
+ assert.equal(chooseSafestRoute([short,safe],[{x:5,y:2,radius:1}]).exit[0],'안전한 출구');
+ assert.equal(chooseSafestRoute([short,safe],[]).exit[0],'가까운 출구');
 });
 
 test('a fire or smoke radius blocks an intersecting route segment',()=>{
