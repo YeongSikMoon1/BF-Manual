@@ -1,0 +1,30 @@
+.route-choice-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.reset-route-button,
+.blocked-route-button {
+  min-height: 48px;
+}
+
+.reset-route-button {
+  border: 1px solid #91a6bf;
+  border-radius: 12px;
+  background: #fff;
+  color: #28425f;
+  font-weight: 700;
+}
+
+.reset-route-button:disabled {
+  opacity: .45;
+}
+
+.ar-map-card footer > div:first-child small {
+  display: block;
+  margin-top: 5px;
+  color: #71839a;
+  font-size: 12px;
+}

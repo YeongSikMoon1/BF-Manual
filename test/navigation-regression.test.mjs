@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,floorData,isLargeBlockingObstacle,isRouteSegmentClear,isVisualPathBlocked,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
+import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,eligibleRouteExits,floorData,isLargeBlockingObstacle,isRouteSegmentClear,isVisualPathBlocked,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
 
 function reachable(graph,start){
  const seen=new Set([start]),queue=[start];
@@ -77,6 +77,20 @@ test('every selectable location can calculate multiple safe-exit candidates',()=
   for(const [,entry] of [[room[1],room[2]],...(room[4]||[])])for(const [exitName,exitNode] of Object.entries(graph.exitNodes))if(reachable(graph,entry).has(exitNode))reachableExits.add(exitName);
   assert.ok(reachableExits.size>=2,`${floor}/${roomId}: only ${reachableExits.size} exit candidate`);
  }
+});
+
+test('without hazards every room can reach every mapped exit on its floor',()=>{
+ for(const [floor,graph] of Object.entries(navigation))for(const [roomId,room] of Object.entries(graph.rooms)){
+  const seen=new Set();
+  for(const [,entry] of [[room[1],room[2]],...(room[4]||[])])for(const node of reachable(graph,entry))seen.add(node);
+  for(const [exitName,exitNode] of Object.entries(graph.exitNodes))assert.ok(seen.has(exitNode),`${floor}/${roomId}: cannot reroute to ${exitName}`);
+ }
+});
+
+test('cancelled detours stay excluded until the user resets them',()=>{
+ const exits=[['1번 출구'],['2번 출구'],['3번 출구']];
+ assert.deepEqual(eligibleRouteExits(exits,['1번 출구','2번 출구']),[['3번 출구']]);
+ assert.deepEqual(eligibleRouteExits(exits,[]),exits);
 });
 
 function nearestExitWithoutHazards(floor,roomId){
