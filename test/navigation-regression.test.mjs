@@ -60,7 +60,7 @@ test('1f exhibition halls can use the rear corridor without crossing walls',()=>
 test('all surveyed hinged doors are mapped on every floor',()=>{
  const expected={
   b1:{'west-elevator':2,'control-room':2,'east-elevator':2,'west-parking':2,'central-parking':4,'south-parking':3,'east-ramp':3},
-  '1f':{hall1:2,hall2:2,hall3:2,multi:3,auditorium:2},
+  '1f':{hall1:2,hall2:2,hall3:2,multi:1,auditorium:1},
   '2f':{'201':2,'202':2,'203':2,'204':2,'205':2,'206':2,'207':2,'208':1,'209':1,'210':1,'211':1,'212':1,'213':1,'214':1},
   '3f':{'301':1,'302':1,'303':1,'304':2,'305':1,'306':2,'307':4}
  };
