@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,eligibleRouteExits,floorData,isLargeBlockingObstacle,isRouteSegmentClear,isVisualPathBlocked,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
+import {advanceArDistance,arrowMode,chooseSafestRoute,directionFromRotation,eligibleRouteExits,floorData,isLargeBlockingObstacle,isRouteSegmentClear,isVisualPathBlocked,mobilityMotionProfile,navigation,pathLength,pointAlongPath,routeProgress,segmentAtProgress,shortestRoutes} from '../app.js';
 
 function reachable(graph,start){
  const seen=new Set([start]),queue=[start];
@@ -137,6 +137,14 @@ test('a fire or smoke radius blocks an intersecting route segment',()=>{
 
 test('AR distance keeps moving until the user chooses a detour',()=>{
  assert.deepEqual(advanceArDistance(12,{obstacle:true,heading:0,target:0}),{distance:11.3,reason:'advanced'});
+});
+
+test('AR movement distance and sensitivity follow the selected mobility status',()=>{
+ const independent=mobilityMotionProfile('혼자서 이동할 수 있어요'),aid=mobilityMotionProfile('보행 보조기구를 사용하고 있어요'),assisted=mobilityMotionProfile('혼자 이동하기 어려워 도움이 필요해요'),wheelchair=mobilityMotionProfile('휠체어를 이용하고 있어요');
+ assert.deepEqual([independent.distance,aid.distance,assisted.distance,wheelchair.distance],[.7,.4,.25,.3]);
+ assert.ok(independent.cooldown<aid.cooldown&&aid.cooldown<assisted.cooldown);
+ assert.ok(wheelchair.minDelta<independent.minDelta);
+ assert.equal(advanceArDistance(12,{heading:0,target:0,step:aid.distance}).distance,11.6);
 });
 
 test('obstacle vision ignores small objects and keeps large central blockers',()=>{
