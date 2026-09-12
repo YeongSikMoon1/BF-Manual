@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceArDistance,chooseSafestRoute,floorData,isRouteSegmentClear,navigation,pathLength,shortestRoutes} from '../app.js';
+import {advanceArDistance,arrowMode,chooseSafestRoute,floorData,isRouteSegmentClear,navigation,pathLength,routeProgress,shortestRoutes} from '../app.js';
 
 function reachable(graph,start){
  const seen=new Set([start]),queue=[start];
@@ -89,4 +89,17 @@ test('AR distance stays fixed when heading is wrong or unavailable',()=>{
  assert.deepEqual(advanceArDistance(12,{heading:180,target:0}),{distance:12,reason:'wrong-direction'});
  assert.deepEqual(advanceArDistance(12,{heading:null,target:0}),{distance:12,reason:'heading-unavailable'});
  assert.deepEqual(advanceArDistance(12,{heading:20,target:0}),{distance:11.3,reason:'advanced'});
+});
+
+test('AR arrow mode distinguishes turns from forward movement',()=>{
+ assert.equal(arrowMode('왼쪽으로 10미터 걸으세요.'),'left');
+ assert.equal(arrowMode('오른쪽으로 8미터 걸으세요.'),'right');
+ assert.equal(arrowMode('문까지 4미터 이동하세요.'),'forward');
+});
+
+test('route progress follows completed walking distance',()=>{
+ const steps=[{distance:10},{distance:20}];
+ assert.deepEqual(routeProgress(steps,0,10),{total:30,remaining:30,percent:0});
+ assert.deepEqual(routeProgress(steps,1,15),{total:30,remaining:15,percent:50});
+ assert.deepEqual(routeProgress(steps,1,0),{total:30,remaining:0,percent:100});
 });
