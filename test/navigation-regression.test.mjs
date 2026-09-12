@@ -35,19 +35,22 @@ test('validated corridor links never cut through a room interior',()=>{
 test('2f maps actual room doors without crossing room 214 east wall',()=>{
  const graph=navigation['2f'];
  for(const roomId of ['201','202','203','204','205','206','207'])assert.equal(graph.rooms[roomId][4].length,1,`2f/${roomId}: missing marked lower door`);
- assert.deepEqual(graph.rooms['214'][4],[[[80,84],'se']]);
+ assert.equal(graph.rooms['214'][4],undefined);
+ assert.deepEqual(graph.rooms['214'].slice(1,3),[[72,79],'r214']);
 });
 
-test('2f rooms 208-214 cannot cross the lower glass wall or room 214 east wall',()=>{
+test('2f room 214 reaches the southeast exit only by the south-side detour',()=>{
  const graph=navigation['2f'];
- for(const roomId of ['208','209','210','211','212','213','214'])assert.equal(reachable(graph,graph.rooms[roomId][2]).has('se'),false,`2f/${roomId}: crosses a wall or glass`);
+ const paths=shortestRoutes(graph.nodes,graph.links,{isClear:()=>true,start:'r214'}),path=paths.se;
+ assert.ok(path.includes('r4')&&path.includes('south214')&&path.includes('eastLower'));
+ assert.equal(path.includes('eastTurn'),false);
 });
 
 test('all surveyed hinged doors are mapped on every floor',()=>{
  const expected={
   b1:{'west-elevator':2,'control-room':2,'east-elevator':2,'west-parking':2,'central-parking':4,'south-parking':3,'east-ramp':3},
   '1f':{hall1:3,hall2:3,hall3:3,multi:3,auditorium:2},
-  '2f':{'201':2,'202':2,'203':2,'204':2,'205':2,'206':2,'207':2,'208':1,'209':1,'210':1,'211':1,'212':1,'213':1,'214':2},
+  '2f':{'201':2,'202':2,'203':2,'204':2,'205':2,'206':2,'207':2,'208':1,'209':1,'210':1,'211':1,'212':1,'213':1,'214':1,'east-annex':1},
   '3f':{'301':1,'302':1,'303':1,'304':2,'305':1,'306':2,'307':4}
  };
  for(const [floor,rooms] of Object.entries(expected))for(const [roomId,count] of Object.entries(rooms)){
@@ -73,7 +76,7 @@ function nearestExitWithoutHazards(floor,roomId){
 }
 
 test('2f rooms choose the nearest reachable exit by corridor distance',()=>{
- const expected={201:'서쪽 비상구',202:'중앙 비상구 1',203:'중앙 비상구 1',204:'중앙 비상구 1',205:'중앙 비상구 1',206:'중앙 비상구 2',207:'중앙 비상구 2',208:'중앙 비상구 2',209:'중앙 비상구 2',210:'중앙 비상구 2',211:'중앙 비상구 2',212:'중앙 비상구 2',213:'중앙 비상구 2',214:'동남쪽 비상구'};
+ const expected={201:'서쪽 비상구',202:'중앙 비상구 1',203:'중앙 비상구 1',204:'중앙 비상구 1',205:'중앙 비상구 1',206:'중앙 비상구 2',207:'중앙 비상구 2',208:'중앙 비상구 2',209:'중앙 비상구 2',210:'중앙 비상구 2',211:'중앙 비상구 2',212:'동남쪽 비상구',213:'중앙 비상구 2',214:'동남쪽 비상구','east-annex':'동남쪽 비상구'};
  for(const [roomId,exit] of Object.entries(expected))assert.equal(nearestExitWithoutHazards('2f',roomId),exit,`2f/${roomId}: should use ${exit}`);
 });
 
